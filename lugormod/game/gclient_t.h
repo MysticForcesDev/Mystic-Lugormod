@@ -1,13 +1,11 @@
-
-typedef struct gclient_s gclient_t;
-
-#ifndef GCLIENT_T_H
-#define GCLIENT_T_H
+#pragma once 
 
 #include "ip_t.h"
 
 // We point to entities, 
 #include "gentity_t.h"
+
+typedef struct gclient_s gclient_t;
 
 typedef struct Action_s Action_t;
 typedef struct Account_s Account_t;
@@ -529,7 +527,7 @@ struct gclient_s {
 		qboolean quiet; //prevent chat and events from going to this player.
 		int fallingToDeathReset; // Clear falling to death when this time passes.
 		//Ufo:
-		int restrict; // current lmd_restrict state
+		int lmd_restrict; // current lmd_restrict state
 		int thinkDelay; // cooldown for lmd_PlayerThink
 		int godTime; // lmd_playereffect
 		int shieldTime;
@@ -541,5 +539,3 @@ struct gclient_s {
 	unsigned int lastTargetUse;
 	unsigned int infoChanged;
 };
-
-#endif

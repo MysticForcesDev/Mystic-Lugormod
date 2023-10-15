@@ -1,8 +1,9 @@
 
 #include "g_local.h"
 
+#if 0 // GCJ: Lmd_Entities_Spawner does what this does
 #include "Lmd_Arrays.h"
-#include "Lmd_Database.h"
+//#include "Lmd_Database.h"
 #include "Lmd_KeyPairs.h"
 #include "Lmd_EntityCore.h"
 
@@ -437,3 +438,4 @@ void SaveEntitiesData(const char *filename){
 
 	trap_FS_FCloseFile(file);
 }
+#endif

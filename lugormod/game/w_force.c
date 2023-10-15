@@ -799,7 +799,7 @@ void WP_InitForcePowers( gentity_t *ent )
 	}
 
 	//Ufo:
-	if (ent->client->Lmd.restrict & 32) {
+	if (ent->client->Lmd.lmd_restrict & 32) {
 		ent->client->Lmd.backupJumpLevel = ent->client->ps.fd.forcePowerLevel[FP_LEVITATION];
 		ent->client->ps.fd.forcePowerLevel[FP_LEVITATION] = 0;
 	}
@@ -997,7 +997,7 @@ int ForcePowerUsableOn(gentity_t *attacker, gentity_t *other, forcePowers_t forc
 			return 0;
 		}
 		//Ufo:
-		if (other->client->Lmd.restrict & 2)
+		if (other->client->Lmd.lmd_restrict & 2)
 			return 0;
 		if (other->client->invulnerableTimer > level.time && forcePower != FP_DRAIN && forcePower != FP_TELEPATHY)
 			return 0;
@@ -1100,7 +1100,7 @@ qboolean WP_ForcePowerAvailable( gentity_t *self, forcePowers_t forcePower, int 
 		return qfalse;
 	}
 
-	if (self->client->Lmd.restrict & 2
+	if (self->client->Lmd.lmd_restrict & 2
 		&& forcePower != FP_SABER_OFFENSE
 		&& forcePower != FP_SABER_DEFENSE)
 	{

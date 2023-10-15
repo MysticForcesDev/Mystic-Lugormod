@@ -1,10 +1,6 @@
+#pragma once 
 
 typedef struct gentity_s gentity_t;
-
-
-#ifndef GENTITY_T_H
-#define GENTITY_T_H
-
 // Some of these might include others...
 // Need to check these for lmd changes
 
@@ -342,6 +338,7 @@ struct gentity_s {
 	struct LmdEnt_s{
 		SpawnData_t *spawnData;
 		qboolean logical; //if we are a logic entity.
+		int customIndex;
 		char *group;
 		struct UseReq_s{
 			int profession;
@@ -361,5 +358,3 @@ struct gentity_s {
 	//RoboPhred
 	qboolean isAutoTargeted; //we were given a targetname automatically
 };
-
-#endif

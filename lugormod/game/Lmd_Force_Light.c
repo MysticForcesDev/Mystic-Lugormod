@@ -387,11 +387,11 @@ void Force_Telepathy_Stop(gentity_t *self, const void *data) {
 
 extern int mindTrickTime[NUM_FORCE_POWER_LEVELS + 2];
 forceTelepathy_t Force_Telepathy_Levels[5] = {
-	{20000, mindTrickTime[1], MAX_TRICK_DISTANCE,		0,		qfalse,	qfalse, 20},
-	{25000, mindTrickTime[2], MAX_TRICK_DISTANCE,		180,	qtrue,	qfalse,	20},
-	{30000, mindTrickTime[3], MAX_TRICK_DISTANCE * 2,	360,	qtrue,	qtrue,	20},
-	{40000, mindTrickTime[4], MAX_TRICK_DISTANCE * 3,	360,	qtrue,	qtrue,	20},
-	{50000, mindTrickTime[5], MAX_TRICK_DISTANCE * 4,	360,	qtrue,	qtrue,	20}
+	{20000,  5000/*mindTrickTime[1]*/, MAX_TRICK_DISTANCE,		0,		qfalse,	qfalse, 20},
+	{25000, 10000/*mindTrickTime[2]*/, MAX_TRICK_DISTANCE,		180,	qtrue,	qfalse,	20},
+	{30000, 15000/*mindTrickTime[3]*/, MAX_TRICK_DISTANCE * 2,	360,	qtrue,	qtrue,	20},
+	{40000, 20000/*mindTrickTime[4]*/, MAX_TRICK_DISTANCE * 3,	360,	qtrue,	qtrue,	20},
+	{50000, 30000/*mindTrickTime[5]*/, MAX_TRICK_DISTANCE * 4,	360,	qtrue,	qtrue,	20}
 };
 
 forcePower_t Force_Telepathy = {

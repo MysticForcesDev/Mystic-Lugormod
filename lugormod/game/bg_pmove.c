@@ -5034,7 +5034,7 @@ static int PM_TryRoll( void )
 		if (PlayerProf_Merc_GetMeleeSkill(ent) < 2)
 			return 0;
 		//Ufo:
-		if (ent->client->Lmd.restrict & 32)
+		if (ent->client->Lmd.lmd_restrict & 32)
 			return 0;
 #else
 		return 0;
@@ -8971,7 +8971,7 @@ static void PM_Weapon( void )
 	{ //special anims for standard melee attacks
 		//Alternate between punches and use the anim length as weapon time.
 		//Ufo:
-		if (!pm->ps->m_iVehicleNum && !(g_entities[pm->ps->clientNum].client->Lmd.restrict & 16))
+		if (!pm->ps->m_iVehicleNum && !(g_entities[pm->ps->clientNum].client->Lmd.lmd_restrict & 16))
 		{ //if riding a vehicle don't do this stuff at all
 			if (pm->debugMelee &&
 				(pm->cmd.buttons & BUTTON_ATTACK) &&

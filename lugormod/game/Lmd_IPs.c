@@ -45,7 +45,7 @@ qboolean Lmd_HostnameIsValid(char *str) {
 	int i, len = strlen(str);
 	int c = 0, dots = 0;
 	if(len > 255)
-		return false;
+		return qfalse;
 	for(i = 0; i < len; i++) {
 		if(c == 0 && str[i] < 'a' && str[i] > 'z' && str[i] < 'A' && str[i] > 'Z' && str[i] < '0' && str[i] > '9')
 			return qfalse;

@@ -117,11 +117,11 @@ qboolean Force_Levitation_Run(gentity_t *self, const void *vData) {
 extern float forceJumpStrength[NUM_FORCE_POWER_LEVELS + 2];
 
 forceLevitate_t Force_Levitation_Levels[5] = {
-	{forceJumpStrength[1], 10, qfalse},
-	{forceJumpStrength[2], 10, qfalse},
-	{forceJumpStrength[3], 10, qfalse},
-	{forceJumpStrength[4], 10, qfalse},
-	{forceJumpStrength[5], 10, qtrue},
+	{/*forceJumpStrength[1]*/420, 10, qfalse},
+	{/*forceJumpStrength[2]*/590, 10, qfalse},
+	{/*forceJumpStrength[3]*/840, 10, qfalse},
+	{/*forceJumpStrength[4]*/840, 10, qfalse},
+	{/*forceJumpStrength[5]*/960, 10, qtrue},
 };
 forcePower_t Force_Levitation = {
 	Force_Levitation_Available,

@@ -35,7 +35,8 @@ DATAFIELDS_BEGIN(StatsFields)
 StatFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
-const int StatsFields_Count = DATAFIELDS_COUNT(StatsFields);
+//const int StatsFields_Count = DATAFIELDS_COUNT(StatsFields);
+#define StatsFields_Count DATAFIELDS_COUNT(StatsFields)
 
 
 accDataModule_t Accounts_Stats = {

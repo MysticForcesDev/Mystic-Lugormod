@@ -1,6 +1,7 @@
 //[CrashLog]
 #include "g_local.h"
 
+#ifdef CRASH_HANDLER
 //For debugging in GCC
 //#define NO_LINUX_CRASHHANDLER
 
@@ -808,3 +809,4 @@ void DisableStackTrace() {
 #endif
 }
 //[/CrashLog]
+#endif

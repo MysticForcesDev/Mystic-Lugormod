@@ -23,6 +23,8 @@ Unlikely:
 #include "Lmd_Accounts_Data.h"
 #include "Lmd_Prof_Core.h"
 
+profSkill_t mercSkills[];
+
 typedef struct mercFields_s{
 	//int Merc[SK_MERC_NUM_SKILLS];
 	struct {
@@ -64,8 +66,8 @@ DATAFIELDS_BEGIN(MercFields)
 MercFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
-const int MercFields_Count = DATAFIELDS_COUNT(MercFields);
-
+//const int MercFields_Count = DATAFIELDS_COUNT(MercFields);
+#define MercFields_Count DATAFIELDS_COUNT(MercFields)
 
 const char *mercSkill_MartialArts_Descr[] = {
 	"Increased melee damage.",
@@ -128,25 +130,11 @@ qboolean Lmd_Prof_Merc_SetSkill_Melee(AccountPtr_t accPtr, profSkill_t *skill, i
 	return qtrue;
 }
 
-profSkill_t mercSkill_MartialArts = {
-	"MartialArts",
-	"Higher martial arts skills yields more damage per strike and grapple moves.",
-	mercSkill_MartialArts_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Merc_GetSkill_Melee,
-	Lmd_Prof_Merc_CanSetSkill_Melee,
-	Lmd_Prof_Merc_SetSkill_Melee
-};
-
 int Lmd_Prof_Merc_GetMeleeSkill(Account_t *acc) {
 	if (!acc) {
 		return 0;
 	}
-	return mercSkill_MartialArts.getValue(acc, &mercSkill_MartialArts);
+	return mercSkills[SK_MERC_MARTIALARTS].getValue(acc, &mercSkills[SK_MERC_MARTIALARTS]);
 }
 
 const char *mercSkill_Weapons_Descr[] = {
@@ -208,21 +196,6 @@ qboolean Lmd_Prof_Merc_SetSkill_Weapons(AccountPtr_t accPtr, profSkill_t *skill,
 	return qtrue;
 }
 
-profSkill_t mercSkill_Weapons = {
-	"Weapons",
-	"Get access to more advanced weaponry.",
-	mercSkill_Weapons_Descr,
-
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Merc_GetSkill_Weapons,
-	Lmd_Prof_Merc_CanSetSkill_Weapons,
-	Lmd_Prof_Merc_SetSkill_Weapons,
-};
-
-
 
 const char *mercSkill_Ammo_Descr[] = {
 	"Increase maximum ammo capacity to 120 percent.",
@@ -283,25 +256,11 @@ qboolean Lmd_Prof_Merc_SetSkill_Ammo(AccountPtr_t accPtr, profSkill_t *skill, in
 	return qtrue;
 }
 
-profSkill_t mercSkill_Ammo = {
-	"Ammo",
-	"Bring more ammo into the field.",
-	mercSkill_Ammo_Descr,
-
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Merc_GetSkill_Ammo,
-	Lmd_Prof_Merc_CanSetSkill_Ammo,
-	Lmd_Prof_Merc_SetSkill_Ammo,
-};
-
 int Lmd_Prof_Merc_GetAmmoSkill(Account_t *acc) {
 	if (!acc) {
 		return 0;
 	}
-	return mercSkill_Ammo.getValue(acc, &mercSkill_Ammo);
+	return mercSkills[SK_MERC_AMMO].getValue(acc, &mercSkills[SK_MERC_AMMO]);
 }
 
 
@@ -364,22 +323,6 @@ qboolean Lmd_Prof_Merc_SetSkill_Shield(AccountPtr_t accPtr, profSkill_t *skill, 
 	return qtrue;
 }
 
-profSkill_t mercSkill_Shield = {
-	"Shield",
-	"Bring a higher shield charge into the field.",
-	mercSkill_Shield_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Merc_GetSkill_Shield,
-	Lmd_Prof_Merc_CanSetSkill_Shield,
-	Lmd_Prof_Merc_SetSkill_Shield,
-};
-
-
-
 const char *mercSkill_ForceResistance_Descr[] = {
 	"Increased Force Push and Pull resistance.",
 	"Increased Force Push and Pull resistance.",
@@ -439,25 +382,11 @@ qboolean Lmd_Prof_Merc_SetSkill_ForceResistance(AccountPtr_t accPtr, profSkill_t
 	return qtrue;
 }
 
-profSkill_t mercSkill_ForceResistance = {
-	"ForceResist",
-	"Resist the effects of force powers.",
-	mercSkill_ForceResistance_Descr,
-
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Merc_GetSkill_ForceResistance,
-	Lmd_Prof_Merc_CanSetSkill_ForceResistance,
-	Lmd_Prof_Merc_SetSkill_ForceResistance
-};
-
 int Lmd_Prof_Merc_GetForceResistanceSkill(Account_t *acc) {
 	if (!acc) {
 		return 0;
 	}
-	return mercSkill_ForceResistance.getValue(acc, &mercSkill_ForceResistance);
+	return mercSkills[SK_MERC_FORCERESISTANCE].getValue(acc, &mercSkills[SK_MERC_FORCERESISTANCE]);
 }
 
 const char *mercSkill_Fuel_Descr[] = {
@@ -528,21 +457,6 @@ qboolean Lmd_Prof_Merc_SetSkill_Fuel(AccountPtr_t accPtr, profSkill_t *skill, in
 	return qtrue;
 }
 
-profSkill_t mercSkill_Fuel = {
-	"Fuel",
-	"Increase your fuel reserves for Jetpack and Flame Burst.",
-	mercSkill_Fuel_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Merc_GetSkill_Fuel,
-	Lmd_Prof_Merc_CanSetSkill_Fuel,
-	Lmd_Prof_Merc_SetSkill_Fuel
-};
-
-
 
 const char *mercSkill_FlameBurst_Descr[] = {
 	"Deal 15 points of damage to your target.",
@@ -598,21 +512,6 @@ qboolean Lmd_Prof_Merc_SetSkill_FlameBurst(AccountPtr_t accPtr, profSkill_t *ski
 	Lmd_Accounts_Modify(acc);
 	return qtrue;
 }
-
-profSkill_t mercSkill_FlameBurst = {
-	"FlameBurst",
-	"Shoot burning fuel onto your target.",
-	mercSkill_FlameBurst_Descr,
-
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Merc_GetSkill_FlameBurst,
-	Lmd_Prof_Merc_CanSetSkill_FlameBurst,
-	Lmd_Prof_Merc_SetSkill_FlameBurst
-};
-
 
 const char *mercSkill_StashRange_Descr[] = {
 	"Detect a nearby money stash.",
@@ -673,26 +572,13 @@ qboolean Lmd_Prof_Merc_SetSkill_StashRange(AccountPtr_t accPtr, profSkill_t *ski
 	return qtrue;
 }
 
-profSkill_t mercSkill_StashRange = {
-	"StashRange",
-	"Use binoculars to locate the money stash.  The binoculars will beep when a stash is nearby, and beep more rapidly as you aim at it.",
-	mercSkill_StashRange_Descr,
-	//SK_MERC_BINOCULARS,
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Merc_GetSkill_StashRange,
-	Lmd_Prof_Merc_CanSetSkill_StashRange,
-	Lmd_Prof_Merc_SetSkill_StashRange,
-};
-
 int Lmd_Prof_Merc_GetStashRangeSkill(Account_t *acc) {
 	if (!acc) {
 		return 0;
 	}
-	return mercSkill_StashRange.getValue(acc, &mercSkill_StashRange);
+	return mercSkills[SK_MERC_STASHRANGE].getValue(acc, &mercSkills[SK_MERC_STASHRANGE]);
 }
+
 
 const char *mercSkill_Ysalamiri_Descr[] = {
 	"",
@@ -752,42 +638,62 @@ qboolean Lmd_Prof_Merc_SetSkill_Ysalamiri(AccountPtr_t accPtr, profSkill_t *skil
 	return qtrue;
 }
 
-profSkill_t mercSkill_Ysalamiri = {
-	"Ysalamiri",
-	"Create a blast of ysalamiri to counter force powers.",
-	mercSkill_Ysalamiri_Descr,
-
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Merc_GetSkill_Ysalamiri,
-	Lmd_Prof_Merc_SetSkill_Ysalamiri,
-	Lmd_Prof_Merc_SetSkill_Ysalamiri
-};
-
-int Lmd_Prof_Merc_GetYsalamiriSkill(Account_t *acc) {
+int Lmd_Prof_Merc_GetYsalamiriSkill(Account_t* acc) {
 	if (!acc) {
 		return 0;
 	}
-	return mercSkill_Ysalamiri.getValue(acc, &mercSkill_Ysalamiri);
+	return mercSkills[SK_MERC_YSALAMIRI].getValue(acc, &mercSkills[SK_MERC_YSALAMIRI]);//mercSkill_Ysalamiri.getValue(acc, &mercSkill_Ysalamiri);
 }
 
-
-
 profSkill_t mercSkills[] = {
-	mercSkill_MartialArts,
-	mercSkill_Weapons,
-	mercSkill_Ammo,
-	mercSkill_Shield,
-	mercSkill_ForceResistance,
-	mercSkill_Fuel,
-	mercSkill_FlameBurst,
-	mercSkill_StashRange,
-	mercSkill_Ysalamiri,
+	{ //mercSkill_MartialArts,
+	"MartialArts", "Higher martial arts skills yields more damage per strike and grapple moves.",
+	mercSkill_MartialArts_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Merc_GetSkill_Melee, Lmd_Prof_Merc_CanSetSkill_Melee, Lmd_Prof_Merc_SetSkill_Melee
+	},
+	{ //mercSkill_Weapons,
+	"Weapons", "Get access to more advanced weaponry.",
+	mercSkill_Weapons_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Merc_GetSkill_Weapons, Lmd_Prof_Merc_CanSetSkill_Weapons, Lmd_Prof_Merc_SetSkill_Weapons,
+	},
+	//mercSkill_Ammo,
+	{ "Ammo", "Bring more ammo into the field.",
+	mercSkill_Ammo_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Merc_GetSkill_Ammo, Lmd_Prof_Merc_CanSetSkill_Ammo, Lmd_Prof_Merc_SetSkill_Ammo,
+	},
+	{ //mercSkill_Shield,
+	"Shield", "Bring a higher shield charge into the field.",
+	mercSkill_Shield_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Merc_GetSkill_Shield, Lmd_Prof_Merc_CanSetSkill_Shield, Lmd_Prof_Merc_SetSkill_Shield,
+	},
+	{ //mercSkill_ForceResistance,
+	"ForceResist", "Resist the effects of force powers.",
+	mercSkill_ForceResistance_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Merc_GetSkill_ForceResistance, Lmd_Prof_Merc_CanSetSkill_ForceResistance, Lmd_Prof_Merc_SetSkill_ForceResistance
+	},
+	{ //mercSkill_Fuel,
+	"Fuel", "Increase your fuel reserves for Jetpack and Flame Burst.",
+	mercSkill_Fuel_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Merc_GetSkill_Fuel, Lmd_Prof_Merc_CanSetSkill_Fuel, Lmd_Prof_Merc_SetSkill_Fuel
+	},
+	{ //mercSkill_FlameBurst,
+	"FlameBurst", "Shoot burning fuel onto your target.",
+	mercSkill_FlameBurst_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Merc_GetSkill_FlameBurst, Lmd_Prof_Merc_CanSetSkill_FlameBurst, Lmd_Prof_Merc_SetSkill_FlameBurst
+	},
+	{ //mercSkill_StashRange,
+	"StashRange", "Use binoculars to locate the money stash.  The binoculars will beep when a stash is nearby, and beep more rapidly as you aim at it.",
+	mercSkill_StashRange_Descr, 0, SkillLevels_Default, SkillPoints_Default, //SK_MERC_BINOCULARS,
+	Lmd_Prof_Merc_GetSkill_StashRange, Lmd_Prof_Merc_CanSetSkill_StashRange, Lmd_Prof_Merc_SetSkill_StashRange,
+	},
+	{ //mercSkill_Ysalamiri,
+	"Ysalamiri", "Create a blast of ysalamiri to counter force powers.",
+	mercSkill_Ysalamiri_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Merc_GetSkill_Ysalamiri, Lmd_Prof_Merc_SetSkill_Ysalamiri, Lmd_Prof_Merc_SetSkill_Ysalamiri
+	},
 };
-const unsigned int mercSkillCount = sizeof(mercSkills) / sizeof(profSkill_t);
-
+//const unsigned int mercSkillCount = sizeof(mercSkills) / sizeof(profSkill_t);
+#define mercSkillCount 9
 
 
 
@@ -1116,7 +1022,7 @@ void Prof_Merc_Flame(gentity_t *ent){
 		return;
 		
 	//Ufo:
-	if (ent->client->Lmd.restrict & 16)
+	if (ent->client->Lmd.lmd_restrict & 16)
 		return;
 	
 	if (ent->client->pers.Lmd.persistantFlags & SPF_CORTOSIS && ent->client->ps.fd.forceGripBeingGripped < level.time)
@@ -1217,7 +1123,7 @@ void Cmd_Flame_f(gentity_t *ent, int iArg){
 	if (!ent->client->pers.Lmd.account) {
 		return;
 	}
-	if (Lmd_Prof_Merc_GetSkill_FlameBurst(ent->client->pers.Lmd.account, &mercSkill_FlameBurst) <= 0) {
+	if (Lmd_Prof_Merc_GetSkill_FlameBurst(ent->client->pers.Lmd.account, &mercSkills[SK_MERC_FLAMEBURST]) <= 0) {
 		Disp(ent, "^3You must have at least level 1 Flame Burst skill to use this.");
 	}
 	else{
@@ -1273,7 +1179,7 @@ void Cmd_Ysalamiri_f (gentity_t *ent, int iArg){
 	}
 	
 	//Ufo:
-	if (ent->client->Lmd.restrict & 16)
+	if (ent->client->Lmd.lmd_restrict & 16)
 		return;
 	
 	if (!(ent->client->ps.stats[STAT_HOLDABLE_ITEMS] & (1<<HI_YSALAMIRI))) {
@@ -1736,7 +1642,7 @@ void Merc_FireGrapplingHook( gentity_t *ent, qboolean alt_fire ) {
 	}
 	
 	//Ufo:
-	if (ent->client->Lmd.restrict & 4)
+	if (ent->client->Lmd.lmd_restrict & 4)
 		return;
 
 	if(ent->client->Lmd.grappleToggleTime > level.time)
@@ -1912,7 +1818,7 @@ void Merc_Spawn(gentity_t *ent)
 	//Ufo:
 	ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax = 75;
 
-	int armorSkill = Lmd_Prof_Merc_GetSkill_Shield(ent->client->pers.Lmd.account, &mercSkill_Shield);
+	int armorSkill = Lmd_Prof_Merc_GetSkill_Shield(ent->client->pers.Lmd.account, &mercSkills[SK_MERC_SHIELD]);
 	if (armorSkill > 0) {
 		//Will be capped to max on spawn finalize if needed.
 		ent->client->ps.stats[STAT_ARMOR] += armorSkill * (ent->client->pers.maxHealth * 0.15f);

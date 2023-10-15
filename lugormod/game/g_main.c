@@ -1077,13 +1077,20 @@ void DisableStackTrace();
 extern "C" {
 #endif
 
-int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, int arg9, int arg10, int arg11  ) {
+#if defined(_MSC_VER)
+#	define DLL_EXPORT __declspec(dllexport)
+#else
+#	define DLL_EXPORT
+#endif
+DLL_EXPORT int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, int arg9, int arg10, int arg11  ) {
 		switch ( command ) {
 	case GAME_INIT:
+#ifdef CRASH_HANDLER
 #ifdef LMD_EXPERIMENTAL
 		ActivateCrashHandler();
 #else
 		EnableStackTrace();
+#endif
 #endif
 //Ufo: discarded
 #ifdef _PATCHER
@@ -1101,10 +1108,12 @@ int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int a
 #ifdef _PATCHER
 		JKG_UnpatchEngine();
 #endif
+#ifdef CRASH_HANDLER
 #ifdef LMD_EXPERIMENTAL
 		DeactivateCrashHandler();
 #else
 		DisableStackTrace();
+#endif
 #endif
 		return 0;
 	case GAME_CLIENT_CONNECT:

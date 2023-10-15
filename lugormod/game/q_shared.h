@@ -1,7 +1,4 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
-//
-#ifndef __Q_SHARED_H
-#define __Q_SHARED_H
+#pragma once 
 
 // q_shared.h -- included first by ALL program modules.
 // A user mod should never modify this file
@@ -3283,4 +3280,3 @@ enum {
 //Lugormod let's put it here instead
 qboolean duelInProgress(const playerState_t *ps);
 
-#endif	// __Q_SHARED_H

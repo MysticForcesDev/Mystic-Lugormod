@@ -9,9 +9,21 @@
 //RoboPhred
 //#define DEBUG_SYSCALLS
 
+#if defined(_MSC_VER)
+#	define DLL_EXPORT __declspec(dllexport)
+#else
+#	define DLL_EXPORT
+#endif
+
 static int (QDECL *syscall)( int arg, ... ) = (int (QDECL *)( int, ...))-1;
 
 #include "../namespace_begin.h"
+
+#if 1
+DLL_EXPORT void dllEntry(int (QDECL* syscallptr)(int arg, ...)) {
+	syscall = syscallptr;
+}
+#else
 #ifdef __cplusplus
 //#ifdef __linux__
 extern "C" {
@@ -22,6 +34,7 @@ extern "C" {
 #ifdef __cplusplus
 	//#ifdef __linux__
 }
+#endif
 #endif
 
 int PASSFLOAT( float x ) {

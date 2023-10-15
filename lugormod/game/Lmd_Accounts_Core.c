@@ -76,7 +76,7 @@ qboolean Accounts_Parse_Password(char *key, char *value, void *target, void *arg
 	else {
 		acc->pwChksum = Checksum(value);
 	}
-	return true;
+	return qtrue;
 }
 
 DataWriteResult_t Accounts_Write_Password(void *target, char key[], int keySize, char value[], int valueSize, void **writeState, void *args) {

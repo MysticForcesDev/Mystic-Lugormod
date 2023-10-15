@@ -4685,7 +4685,7 @@ void Merc_FireGrapplingHook( gentity_t *ent, qboolean alt_fire );
 
 void FireWeapon( gentity_t *ent, qboolean altFire ) {
 	//Ufo:
-	if (ent->client->Lmd.restrict & 16) {
+	if (ent->client->Lmd.lmd_restrict & 16) {
 		return;
 	}
 

@@ -179,9 +179,9 @@ qboolean Lmd_Data_ParseFields_Callback(char *key, char *value, void *pstate) {
 	if((state->callback && state->callback(state->structure, qtrue, key, value)) ||
 		(state->fields && state->structure && (BG_ParseField(state->fields, key, value, state->structure) ||
 			(state->callback && state->callback(state->structure, qfalse, key, value))))){
-				return true;
+				return qtrue;
 		}
-	return false;
+	return qfalse;
 }
 
 unsigned int Lmd_Data_ParseFields_Old(char **str, qboolean requireValue, qboolean (*callback)(byte *object, qboolean pre, char *key, char *value), BG_field_t *fields, byte* structure) {

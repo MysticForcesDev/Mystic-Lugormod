@@ -1,4 +1,4 @@
-
+// GCJ: Condensed and Reworked this file for compile purposes.
 #include "g_local.h"
 #include "Lmd_Accounts_Public.h"
 #include "Lmd_Data.h"
@@ -117,8 +117,8 @@ DATAFIELDS_BEGIN(JediFields)
 JediFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
-const int JediFields_Count = DATAFIELDS_COUNT(JediFields);
-
+//const int JediFields_Count = DATAFIELDS_COUNT(JediFields);
+#define JediFields_Count DATAFIELDS_COUNT(JediFields)
 
 extern int forcePowerDarkLight[NUM_FORCE_POWERS];
 //Ufo: redesigned so that having skills of both force sides appears as no side rather than jedi side due to heal skill having 0 index
@@ -168,7 +168,6 @@ const unsigned int jediFieldsCount = (sizeof(jediFields) / sizeof(BG_field_t)) -
 #endif
 
 
-
 const char *jediSkill_Neutral_Jump_Descr[] = {
 	"Gain the force jump power.",
 	"Jump higher.",
@@ -177,22 +176,7 @@ const char *jediSkill_Neutral_Jump_Descr[] = {
 	"Jump higher.  Jump in the air.",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Jump, FP_LEVITATION)
-
-profSkill_t jediSkill_Neutral_Jump = {
-	"Jump",
-	"Use the force to reach higher places.",
-	jediSkill_Neutral_Jump_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Jump,
-	Lmd_Prof_Jedi_CanSetSkill_Jump,
-	Lmd_Prof_Jedi_SetSkill_Jump,
-};
 
 const char *jediSkill_Neutral_Push_Descr[] = {
 	"Gain the Push force power.  Push those that you target.",
@@ -203,22 +187,7 @@ const char *jediSkill_Neutral_Push_Descr[] = {
 	"",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Push, FP_PUSH)
-
-profSkill_t jediSkill_Neutral_Push = {
-	"Push",
-	"Push items and people away from you.  Deflect projectiles.  Break saber locks in your favor.",
-	jediSkill_Neutral_Push_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Push,
-	Lmd_Prof_Jedi_CanSetSkill_Push,
-	Lmd_Prof_Jedi_SetSkill_Push
-};
 
 const char *jediSkill_Neutral_Pull_Descr[] = {
 	"Gain the Pull force power.  Push those that you target.",
@@ -228,22 +197,7 @@ const char *jediSkill_Neutral_Pull_Descr[] = {
 	"Pull with twice the normal force." ,
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Pull, FP_PULL)
-
-profSkill_t jediSkill_Neutral_Pull = {
-	"Pull",
-	"Pull items, people, and projectiles to you.",
-	jediSkill_Neutral_Pull_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Pull,
-	Lmd_Prof_Jedi_CanSetSkill_Pull,
-	Lmd_Prof_Jedi_SetSkill_Pull,
-};
 
 const char *jediSkill_Neutral_Speed_Descr[] = {
 	"Gain the Speed force power.  Lasts 10 seconds.",
@@ -253,23 +207,7 @@ const char *jediSkill_Neutral_Speed_Descr[] = {
 	"Increase the Speed duration to 35 seconds.",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Speed, FP_SPEED)
-
-profSkill_t jediSkill_Neutral_Speed = {
-	"Speed",
-	"Gain a burst of speed.",
-	jediSkill_Neutral_Speed_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Speed,
-	Lmd_Prof_Jedi_CanSetSkill_Speed,
-	Lmd_Prof_Jedi_SetSkill_Speed
-};
-
 
 const char *jediSkill_Neutral_Seeing_Descr[] = {
 	"Gain the Seeing force power.  Lasts 10 seconds",
@@ -279,33 +217,38 @@ const char *jediSkill_Neutral_Seeing_Descr[] = {
 	"Increase the Seeing duration to 60 seconds.",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Seeing, FP_SEE)
 
-profSkill_t jediSkill_Neutral_Seeing = {
-	"Seeing",
-	"Locate others through barriers, and find the money stash.  Sense others using Mind Trick",
-	jediSkill_Neutral_Seeing_Descr,
-	
-	0,
-	//Ufo:
-	{0, 3},
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Seeing,
-	Lmd_Prof_Jedi_CanSetSkill_Seeing,
-	Lmd_Prof_Jedi_SetSkill_Seeing
-};
 
 profSkill_t jediSkill_Neutral_Subskills[] = {
-	jediSkill_Neutral_Jump,
-	jediSkill_Neutral_Push,
-	jediSkill_Neutral_Pull,
-	jediSkill_Neutral_Speed,
-	jediSkill_Neutral_Seeing,
+	{ //jediSkill_Neutral_Jump,
+	"Jump",	"Use the force to reach higher places.",	
+	jediSkill_Neutral_Jump_Descr, 0, SkillLevels_Default, SkillPoints_Default, 
+	Lmd_Prof_Jedi_GetSkill_Jump, Lmd_Prof_Jedi_CanSetSkill_Jump, Lmd_Prof_Jedi_SetSkill_Jump, 
+	},
+	{ //jediSkill_Neutral_Push,
+	"Push", "Push items and people away from you.  Deflect projectiles.  Break saber locks in your favor.",
+	jediSkill_Neutral_Push_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Push, Lmd_Prof_Jedi_CanSetSkill_Push, Lmd_Prof_Jedi_SetSkill_Push
+	},
+	{ //jediSkill_Neutral_Pull,
+	"Pull", "Pull items, people, and projectiles to you.",
+	jediSkill_Neutral_Pull_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Pull, Lmd_Prof_Jedi_CanSetSkill_Pull, Lmd_Prof_Jedi_SetSkill_Pull,
+	},
+	{ //jediSkill_Neutral_Speed,
+	"Speed", "Gain a burst of speed.",
+	jediSkill_Neutral_Speed_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Speed, Lmd_Prof_Jedi_CanSetSkill_Speed, Lmd_Prof_Jedi_SetSkill_Speed
+	},
+	{ //jediSkill_Neutral_Seeing,
+	"Seeing", "Locate others through barriers, and find the money stash.  Sense others using Mind Trick",
+	jediSkill_Neutral_Seeing_Descr, 0, {0, 3}, SkillPoints_Default, //Ufo:
+	Lmd_Prof_Jedi_GetSkill_Seeing, Lmd_Prof_Jedi_CanSetSkill_Seeing, Lmd_Prof_Jedi_SetSkill_Seeing
+	},
 };
-const unsigned int jediSkillNeutralCount = sizeof(jediSkill_Neutral_Subskills) / sizeof(profSkill_t);
-
+//const unsigned int jediSkillNeutralCount = sizeof(jediSkill_Neutral_Subskills) / sizeof(profSkill_t);
+#define jediSkillNeutralCount 5 
 
 const char *jediSkill_Light_Absorb_Descr[] = {
 	"Gain the Absorb force power.  Become immune to the Lightning, Drain, Grip, Push, and Pull force powers.  Absorb 1/3 of the force energy.",
@@ -315,24 +258,7 @@ const char *jediSkill_Light_Absorb_Descr[] = {
 	"Absorb all of the force energy, and gain 2/3 more.  Use Protect while absorbing.",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Absorb, FP_ABSORB)
-
-
-profSkill_t jediSkill_Light_Absorb = {
-	"Absorb",
-	"Absorb force powers used against you for 20 seconds.  Escape from the Grip force power.",
-	jediSkill_Light_Absorb_Descr,
-
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Absorb,
-	Lmd_Prof_Jedi_CanSetSkill_Absorb,
-	Lmd_Prof_Jedi_SetSkill_Absorb
-};
-
 
 const char *jediSkill_Light_Heal_Descr[] = {
 	"Gain the Heal force power.  Restore 5 health when used.",
@@ -342,23 +268,7 @@ const char *jediSkill_Light_Heal_Descr[] = {
 	"Restore 50 health when used.",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Heal, FP_HEAL)
-
-profSkill_t jediSkill_Light_Heal = {
-	"Heal",
-	"Heal yourself.",
-	jediSkill_Light_Heal_Descr,
-
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Heal,
-	Lmd_Prof_Jedi_CanSetSkill_Heal,
-	Lmd_Prof_Jedi_SetSkill_Heal,
-};
-
 
 const char *jediSkill_Light_Protect_Descr[] = {
 	"Gain the Protect force power.  Protect against 4/10 of the damage at 1 force point per damage point.",
@@ -368,22 +278,7 @@ const char *jediSkill_Light_Protect_Descr[] = {
 	"Protect against 9/10 of the damage at 1 force point per 7 damage points.",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Protect, FP_PROTECT)
-
-profSkill_t jediSkill_Light_Protect = {
-	"Protect",
-	"Protect yourself from damage.",
-	jediSkill_Light_Protect_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Protect,
-	Lmd_Prof_Jedi_CanSetSkill_Protect,
-	Lmd_Prof_Jedi_SetSkill_Protect,
-};
 
 const char *jediSkill_Light_MindTrick_Descr[] = {
 	"Gain the Mind Trick force power.  Become invisible to your target for 20 seconds.",
@@ -393,52 +288,42 @@ const char *jediSkill_Light_MindTrick_Descr[] = {
 	"Invisibility time increased to 50 seconds at four times the usual distance.",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(MindTrick, FP_TELEPATHY)
-
-profSkill_t jediSkill_Light_MindTrick = {
-	"MindTrick",
-	"Trick others and become invisible to them.  You will become visible if you attack, or to anyone who uses Force Sense.",
-	jediSkill_Light_MindTrick_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_MindTrick,
-	Lmd_Prof_Jedi_CanSetSkill_MindTrick,
-	Lmd_Prof_Jedi_SetSkill_MindTrick,
-};
 
 const char *jediSkill_Light_TeamHeal_Descr[] = {
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(TeamHeal, FP_TEAM_HEAL)
 
-profSkill_t jediSkill_Light_TeamHeal = {
-	"TeamHeal",
-	"Heal others around you.  Control who you heal by adding them to \'/buddies\'.",
-	jediSkill_Light_TeamHeal_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_TeamHeal,
-	Lmd_Prof_Jedi_CanSetSkill_TeamHeal,
-	Lmd_Prof_Jedi_SetSkill_TeamHeal
-};
-
 profSkill_t jediSkill_Light_Subskills[] = {
-	jediSkill_Light_Absorb,
-	jediSkill_Light_Heal,
-	jediSkill_Light_Protect,
-	jediSkill_Light_MindTrick,
-	jediSkill_Light_TeamHeal
+	{ //jediSkill_Light_Absorb,
+	"Absorb", "Absorb force powers used against you for 20 seconds.  Escape from the Grip force power.",
+	jediSkill_Light_Absorb_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Absorb, Lmd_Prof_Jedi_CanSetSkill_Absorb, Lmd_Prof_Jedi_SetSkill_Absorb
+	},
+	{ //jediSkill_Light_Heal,
+	"Heal", "Heal yourself.",
+	jediSkill_Light_Heal_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Heal, Lmd_Prof_Jedi_CanSetSkill_Heal, Lmd_Prof_Jedi_SetSkill_Heal,
+	},
+	{ //jediSkill_Light_Protect,
+	"Protect", "Protect yourself from damage.",
+	jediSkill_Light_Protect_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Protect, Lmd_Prof_Jedi_CanSetSkill_Protect, Lmd_Prof_Jedi_SetSkill_Protect,
+	},
+	{ //jediSkill_Light_MindTrick,
+	"MindTrick", "Trick others and become invisible to them.  You will become visible if you attack, or to anyone who uses Force Sense.",
+	jediSkill_Light_MindTrick_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_MindTrick, Lmd_Prof_Jedi_CanSetSkill_MindTrick, Lmd_Prof_Jedi_SetSkill_MindTrick,
+	},
+	{ //jediSkill_Light_TeamHeal
+	"TeamHeal", "Heal others around you.  Control who you heal by adding them to \'/buddies\'.",
+	jediSkill_Light_TeamHeal_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_TeamHeal, Lmd_Prof_Jedi_CanSetSkill_TeamHeal, Lmd_Prof_Jedi_SetSkill_TeamHeal
+	}
 };
-const unsigned int jediSkillLightCount = sizeof(jediSkill_Light_Subskills) / sizeof(profSkill_t);
-
+//const unsigned int jediSkillLightCount = sizeof(jediSkill_Light_Subskills) / sizeof(profSkill_t);
+#define jediSkillLightCount 5
 
 const char *jediSkill_Dark_Grip_Descr[] = {
 	"Gain the Grip force power.  Grip a target for 5 seconds.",
@@ -448,43 +333,12 @@ const char *jediSkill_Dark_Grip_Descr[] = {
 	"Grip others four times farther than normal.",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Grip, FP_GRIP)
-
-profSkill_t jediSkill_Dark_Grip = {
-	"Grip",
-	"Paralyze a target and do more damage the longer they are held.",
-	jediSkill_Dark_Grip_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Grip,
-	Lmd_Prof_Jedi_CanSetSkill_Grip,
-	Lmd_Prof_Jedi_SetSkill_Grip,
-};
-
 
 const char *jediSkill_Dark_Drain_Descr[] = {
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Drain, FP_DRAIN)
-
-profSkill_t jediSkill_Dark_Drain = {
-	"Drain",
-	"Take force energy from others to heal yourself.",
-	jediSkill_Dark_Drain_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Drain,
-	Lmd_Prof_Jedi_CanSetSkill_Drain,
-	Lmd_Prof_Jedi_SetSkill_Drain,
-};
 
 const char *jediSkill_Dark_Lightnig_Descr[] = {
 	"Gain the Lightning force power.  Shoot a burst of electricity for half a second directly at the target.",
@@ -494,22 +348,7 @@ const char *jediSkill_Dark_Lightnig_Descr[] = {
 	"Shoot lightning twice as far as usual.",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Lightning, FP_LIGHTNING)
-
-profSkill_t jediSkill_Dark_Lightning = {
-	"Lightning",
-	"Shocks others with a damaging lightning burst.",
-	jediSkill_Dark_Lightnig_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Lightning,
-	Lmd_Prof_Jedi_CanSetSkill_Lightning,
-	Lmd_Prof_Jedi_SetSkill_Lightning
-};
 
 const char *jediSkill_Dark_Rage_Descr[] = {
 	"Gain the Rage force power.  Do 1/5 more saber damage while active.  Health decreases at 40 points every 3 seconds.",
@@ -519,220 +358,126 @@ const char *jediSkill_Dark_Rage_Descr[] = {
 	"Do twice as much saber damage while active.  Health decreases at 4 points every 3 seconds.",
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Rage, FP_RAGE)
-
-profSkill_t jediSkill_Dark_Rage = {
-	"Rage",
-	"Increase your speed damage and defense with the power of the force at the cost of degenerating health.  You need to recover for a short time afterwards.\n"
-		"While using rage, you can resist death even when you have very low health.",
-	jediSkill_Dark_Rage_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Rage,
-	Lmd_Prof_Jedi_CanSetSkill_Rage,
-	Lmd_Prof_Jedi_SetSkill_Rage,
-};
 
 const char *jediSkill_Dark_Energize_Descr[] = {
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Energize, FP_TEAM_FORCE)
 
-profSkill_t jediSkill_Dark_Energize = {
-	"Energize",
-	"Recharge force energy of those around you.  Control who you recharge by adding them to \'/buddies\'.",
-	jediSkill_Dark_Energize_Descr,
-	
-	0,
-	SkillLevels_Default,
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Energize,
-	Lmd_Prof_Jedi_CanSetSkill_Energize,
-	Lmd_Prof_Jedi_SetSkill_Energize
-};
-
 profSkill_t jediSkill_Dark_Subskills[] = {
-	jediSkill_Dark_Grip,
-	jediSkill_Dark_Drain,
-	jediSkill_Dark_Lightning,
-	jediSkill_Dark_Rage,
-	jediSkill_Dark_Energize,
+	{ //jediSkill_Dark_Grip,
+	"Grip", "Paralyze a target and do more damage the longer they are held.",
+	jediSkill_Dark_Grip_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Grip, Lmd_Prof_Jedi_CanSetSkill_Grip, Lmd_Prof_Jedi_SetSkill_Grip,
+	},
+	{ //jediSkill_Dark_Drain,
+	"Drain", "Take force energy from others to heal yourself.",
+	jediSkill_Dark_Drain_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Drain, Lmd_Prof_Jedi_CanSetSkill_Drain, Lmd_Prof_Jedi_SetSkill_Drain,
+	},
+	{ //jediSkill_Dark_Lightning,
+	"Lightning", "Shocks others with a damaging lightning burst.",
+	jediSkill_Dark_Lightnig_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Lightning, Lmd_Prof_Jedi_CanSetSkill_Lightning, Lmd_Prof_Jedi_SetSkill_Lightning
+	},
+	{ //jediSkill_Dark_Rage,
+	"Rage", "Increase your speed damage and defense with the power of the force at the cost of degenerating health.  You need to recover for a short time afterwards.\n While using rage, you can resist death even when you have very low health.",
+	jediSkill_Dark_Rage_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Rage, Lmd_Prof_Jedi_CanSetSkill_Rage, Lmd_Prof_Jedi_SetSkill_Rage,
+	},
+	{ //jediSkill_Dark_Energize,
+	"Energize", "Recharge force energy of those around you.  Control who you recharge by adding them to \'/buddies\'.",
+	jediSkill_Dark_Energize_Descr, 0, SkillLevels_Default, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Energize, Lmd_Prof_Jedi_CanSetSkill_Energize, Lmd_Prof_Jedi_SetSkill_Energize
+	},
 };
-const unsigned int jediSkillDarkCount = sizeof(jediSkill_Dark_Subskills) / sizeof(profSkill_t);
+//const unsigned int jediSkillDarkCount = sizeof(jediSkill_Dark_Subskills) / sizeof(profSkill_t);
+#define jediSkillDarkCount 5
 
 const char *jediSkill_Saber_Attack_Descr[] = {
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Saber_Attack, FP_SABER_OFFENSE)
-
-profSkill_t jediSkill_Saber_Attack = {
-	"Attack",
-	"Your skills with a saber.",
-	jediSkill_Saber_Attack_Descr,
-	
-	0,
-	{3, 3},
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Saber_Attack,
-	Lmd_Prof_Jedi_CanSetSkill_Saber_Attack,
-	Lmd_Prof_Jedi_SetSkill_Saber_Attack
-};
-
 
 const char *jediSkill_Saber_Defend_Descr[] = {
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Saber_Defend, FP_SABER_DEFENSE)
-
-profSkill_t jediSkill_Saber_Defend = {
-	"Defend",
-	"Your ability to defend yourself and deflect projectiles with a saber.",
-	jediSkill_Saber_Defend_Descr,
-
-	0,
-	{3, 3},
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Saber_Defend,
-	Lmd_Prof_Jedi_CanSetSkill_Saber_Defend,
-	Lmd_Prof_Jedi_SetSkill_Saber_Defend
-};
-
 
 const char *jediSkill_Saber_Throw_Descr[] = {
 	NULL
 };
-
 STD_FORCEPOWER_FUNCS(Saber_Throw, FP_SABERTHROW)
 
-profSkill_t jediSkill_Saber_Throw = {
-	"Throw",
-	"Your ability to throw the saber as a projectile.",
-	jediSkill_Saber_Throw_Descr,
-	
-	0,
-	{3, 3},
-	SkillPoints_Default,
-
-	Lmd_Prof_Jedi_GetSkill_Saber_Throw,
-	Lmd_Prof_Jedi_CanSetSkill_Saber_Throw,
-	Lmd_Prof_Jedi_SetSkill_Saber_Throw
-};
-
 profSkill_t jediSkill_Saber_Subskills[] = {
-	jediSkill_Saber_Attack,
-	jediSkill_Saber_Defend,
-	jediSkill_Saber_Throw,
+	{ //jediSkill_Saber_Attack,
+	"Attack", "Your skills with a saber.",
+	jediSkill_Saber_Attack_Descr, 0, {3, 3}, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Saber_Attack, Lmd_Prof_Jedi_CanSetSkill_Saber_Attack, Lmd_Prof_Jedi_SetSkill_Saber_Attack
+	},
+	{ //jediSkill_Saber_Defend,
+	"Defend", "Your ability to defend yourself and deflect projectiles with a saber.",
+	jediSkill_Saber_Defend_Descr, 0, {3, 3}, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Saber_Defend, Lmd_Prof_Jedi_CanSetSkill_Saber_Defend, Lmd_Prof_Jedi_SetSkill_Saber_Defend
+	},
+	{ //jediSkill_Saber_Throw,
+	"Throw", "Your ability to throw the saber as a projectile.",
+	jediSkill_Saber_Throw_Descr, 0, {3, 3}, SkillPoints_Default,
+	Lmd_Prof_Jedi_GetSkill_Saber_Throw, Lmd_Prof_Jedi_CanSetSkill_Saber_Throw, Lmd_Prof_Jedi_SetSkill_Saber_Throw
+	},
 };
-const unsigned int jediSkillaberCount = sizeof(jediSkill_Saber_Subskills) / sizeof(profSkill_t);
+//const unsigned int jediSkillaberCount = sizeof(jediSkill_Saber_Subskills) / sizeof(profSkill_t);
+#define jediSkillaberCount 3
 
 const char *jediSkill_Neutral_Descr[] = {
 	NULL
 };
-profSkill_t jediSkill_Neutral = {
-	"Neutral",
-	"Neutral force powers.",
-	jediSkill_Neutral_Descr,
-
-	0,
-
-	{0,0},
-	SkillPoints_Default,
-
-	NULL,
-	NULL,
-	NULL,
-
-	{
-		jediSkillNeutralCount,
-		(profSkill_t *)jediSkill_Neutral_Subskills
-	},
-};
-
 const char *jediSkill_Jedi_Descr[] = {
 	NULL
 };
-
-profSkill_t jediSkill_Jedi = {
-	"Jedi",
-	"Powers of the Jedi.",
-	jediSkill_Jedi_Descr,
-	
-	1,
-	{0,0},
-	SkillPoints_Default,
-
-	NULL,
-	NULL,
-	NULL,
-
-	{
-		jediSkillLightCount,
-		(profSkill_t *)jediSkill_Light_Subskills
-	},
-};
-
 const char *jediSkill_Sith_Descr[] = {
 	NULL
 };
-
-profSkill_t jediSkill_Sith = {
-	"Sith",
-	"Powers of the Sith.",
-	jediSkill_Sith_Descr,
-	
-	1,
-	{0,0}, 
-	SkillPoints_Default,
-	
-	NULL,
-	NULL,
-	NULL,
-
-	{
-		jediSkillDarkCount, (profSkill_t *)jediSkill_Dark_Subskills
-	},
-};
-
 const char *jediSkill_Saber_Descr[] = {
 	NULL
 };
 
-profSkill_t jediSkill_Saber = {
-	"Saber",
-	"Skills with a saber.",
-	jediSkill_Saber_Descr,
-	
-	0,
-	{0,0},
-	SkillPoints_Default,
-
-	NULL,
-	NULL,
-	NULL,
-
-	{
-		jediSkillaberCount,
-		(profSkill_t *)jediSkill_Saber_Subskills
-	}
-};
-
 profSkill_t jediSkill[] = {
-	jediSkill_Neutral,
-	jediSkill_Jedi,
-	jediSkill_Sith,
-	jediSkill_Saber
+	{ //jediSkill_Neutral,
+	"Neutral", "Neutral force powers.",
+	jediSkill_Neutral_Descr, 0, {0,0}, SkillPoints_Default, NULL, NULL, NULL,
+	{
+		jediSkillNeutralCount, (profSkill_t*)jediSkill_Neutral_Subskills
+	},
+	},
+
+	{ //jediSkill_Jedi,
+	"Jedi", "Powers of the Jedi.",
+	jediSkill_Jedi_Descr, 1, {0,0}, SkillPoints_Default, NULL, NULL, NULL,
+	{
+		jediSkillLightCount, (profSkill_t*)jediSkill_Light_Subskills
+	},
+	},
+
+	{ //jediSkill_Sith,
+	"Sith", "Powers of the Sith.",
+	jediSkill_Sith_Descr, 1, {0,0}, SkillPoints_Default, NULL, NULL, NULL,
+	{
+		jediSkillDarkCount, (profSkill_t*)jediSkill_Dark_Subskills
+	},
+	},
+
+	{ //jediSkill_Saber
+	"Saber", "Skills with a saber.",
+	jediSkill_Saber_Descr, 0, {0,0}, SkillPoints_Default, NULL, NULL, NULL,
+	{
+		jediSkillaberCount, (profSkill_t*)jediSkill_Saber_Subskills
+	},
+	},
 };
-const unsigned int jediSkillCount = sizeof(jediSkill) / sizeof(profSkill_t);
+//const unsigned int jediSkillCount = sizeof(jediSkill) / sizeof(profSkill_t);
+#define jediSkillCount 4
 
 int Jedi_GetForceIncrease(gentity_t *ent) {
 	return 0;

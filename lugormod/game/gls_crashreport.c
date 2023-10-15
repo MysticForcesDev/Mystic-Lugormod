@@ -7,7 +7,7 @@
 //
 ////////////////////////////////
 
-
+#ifdef CRASH_HANDLER
 #define	GAMEVERSION	"JKA Galaxies v0.1"
 
 int	bCrashing = 0;
@@ -600,3 +600,4 @@ void DeactivateCrashHandler() {
 
 #endif
 
+#endif

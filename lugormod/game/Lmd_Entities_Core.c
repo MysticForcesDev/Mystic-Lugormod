@@ -13,7 +13,7 @@ gentity_t *GetEnt(int index) {
 		return Lmd_logic_entity(index - MAX_GENTITIES);
 }
 
-inline gentity_t *IterateEnts(gentity_t *from) {
+gentity_t *IterateEnts(gentity_t *from) {
 
 	if(!from) {
 		from = &g_entities[0];

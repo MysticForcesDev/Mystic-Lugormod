@@ -2,7 +2,7 @@
 
 #include "g_local.h"
 
-
+#if 0 // GCJ: Replaced by Lmd_mem.c
 #include "Lmd_Arrays.h"
 
 #define LMD_USE_MALLOC
@@ -144,3 +144,5 @@ void Svcmd_GameMem_f( void ) {
 	G_Printf("^2%u bytes alloced in %u units\n", sze, memCount);
 }
 #endif //__linux__
+
+#endif

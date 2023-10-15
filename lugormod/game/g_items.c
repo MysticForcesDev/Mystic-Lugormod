@@ -622,7 +622,7 @@ void ItemUse_Binoculars(gentity_t *ent)
 void ItemUse_Shield(gentity_t *ent)
 {
 	//Ufo:
-	if (!ent || !ent->client || ent->client->Lmd.restrict & 16)
+	if (!ent || !ent->client || ent->client->Lmd.lmd_restrict & 16)
 		return;
 
 	PlaceShield(ent);
@@ -1151,7 +1151,7 @@ void ItemUse_Sentry( gentity_t *ent )
 	gentity_t *sentry;
 
 	//Ufo:
-	if (!ent || !ent->client || ent->client->Lmd.restrict & 16)
+	if (!ent || !ent->client || ent->client->Lmd.lmd_restrict & 16)
 	{
 		return;
 	}
@@ -1228,7 +1228,7 @@ extern gentity_t *NPC_SpawnType( gentity_t *ent, char *npc_type, char *targetnam
 void ItemUse_Seeker(gentity_t *ent)
 {
 	//Ufo:
-	if (!ent || !ent->client || ent->client->Lmd.restrict & 16)
+	if (!ent || !ent->client || ent->client->Lmd.lmd_restrict & 16)
 		return;
 
 	if ( (g_gametype.integer == GT_SIEGE ||
@@ -1343,7 +1343,7 @@ void Jetpack_On(gentity_t *ent)
 
 	//RoboPhred
 	//Ufo:
-	if(ent->client->Lmd.restrict & 4)
+	if(ent->client->Lmd.lmd_restrict & 4)
 		return;
 
 	G_Sound(ent, CHAN_BODY, G_SoundIndex("sound/chars/boba/jeton.wav"));
@@ -1400,7 +1400,7 @@ void ItemUse_Jetpack( gentity_t *ent )
 	else {
 
 		//Ufo:
-		if(ent->client->Lmd.restrict & 4)
+		if(ent->client->Lmd.lmd_restrict & 4)
 			return;
 
 		if(!ent->client->jetPackOn) {
@@ -1423,7 +1423,7 @@ void ItemUse_Jetpack( gentity_t *ent )
 
 	//RoboPhred
 	//Ufo: 
-	if(ent->client->ps.weaponTime > 0 && !(ent->client->Lmd.restrict & 16))
+	if(ent->client->ps.weaponTime > 0 && !(ent->client->Lmd.lmd_restrict & 16))
 		return;
 
 	if (ent->client->jetPackToggleTime >= level.time)
@@ -1458,7 +1458,7 @@ void ItemUse_UseCloak( gentity_t *ent )
 	assert(ent && ent->client);
 
 	//Ufo:
-	if (!ent || !ent->client || ent->client->Lmd.restrict & 16)
+	if (!ent || !ent->client || ent->client->Lmd.lmd_restrict & 16)
 		return;
 
 	if (ent->client->cloakToggleTime >= level.time)
@@ -1590,7 +1590,7 @@ void ItemUse_UseDisp(gentity_t *ent, int type)
 	//gentity_t *eItem;
 
 	//Ufo:
-	if (!ent || !ent->client || ent->client->Lmd.restrict & 16)
+	if (!ent || !ent->client || ent->client->Lmd.lmd_restrict & 16)
 		return;
 
 	if (ent->client->tossableItemDebounce > level.time)

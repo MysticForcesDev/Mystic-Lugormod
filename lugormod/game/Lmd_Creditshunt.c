@@ -156,7 +156,7 @@ void money_stash_touch (gentity_t *self, gentity_t *other, trace_t *trace){
 
 	//RoboPhred: still recovering from a previous action, cant pick it up.
 	//Ufo:
-	if(other->client->ps.weaponTime > 0 && !(other->client->Lmd.restrict & 16))
+	if(other->client->ps.weaponTime > 0 && !(other->client->Lmd.lmd_restrict & 16))
 		return;
 	//RoboPhred: stunned, cant pick it up.
 	if(other->client->ps.electrifyTime >= level.time)

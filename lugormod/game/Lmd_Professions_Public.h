@@ -16,7 +16,8 @@ typedef struct skillLevelDef_s {
 	qboolean canRemove;
 }skillLevelDef_t;
 
-static skillLevelDef_t SkillLevels_Default = {0, 5, qfalse};
+//static skillLevelDef_t SkillLevels_Default = {0, 5, qfalse};
+#define SkillLevels_Default {0, 5, qfalse}
 
 typedef enum {
 	SPT_NOCOST,
@@ -32,7 +33,8 @@ typedef struct skillPointData_s {
 	////points = cost + (level * multiplier).  Usual skills have cost and mult of 1
 }skillPointData_t;
 
-static skillPointData_t SkillPoints_Default = {SPT_TRIANGULAR};
+//static skillPointData_t SkillPoints_Default = {SPT_TRIANGULAR};
+#define SkillPoints_Default SPT_TRIANGULAR
 
 struct profSkill_s{
 	char *name;

@@ -132,7 +132,8 @@ DATAFIELDS_BEGIN(PropertyFields)
 PropertyFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
-const int PropertyFields_Count = DATAFIELDS_COUNT(PropertyFields);
+//const int PropertyFields_Count = DATAFIELDS_COUNT(PropertyFields);
+#define PropertyFields_Count DATAFIELDS_COUNT(PropertyFields)
 
 void Accounts_Property_Free(void *data){
 	propData_t *propData = (propData_t *)data;

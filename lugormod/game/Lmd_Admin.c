@@ -21,7 +21,7 @@ int ClientNumberFromString( gentity_t *to, char *s );
 
 void Professions_SetDefaultSkills(Account_t *acc, int prof);
 void ClientCleanName(const char *in, char *out, int outSize);
-qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister);
+extern qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister);
 void Cmd_AccountEdit_f(gentity_t *ent, int iArg){
 	Account_t *acc;
 	char arg[MAX_STRING_CHARS];

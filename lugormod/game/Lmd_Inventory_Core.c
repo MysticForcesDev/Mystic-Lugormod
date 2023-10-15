@@ -137,7 +137,8 @@ DATAFIELDS_BEGIN(InventoryFields)
 InventoryFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
-const int InventoryFields_Count = DATAFIELDS_COUNT(InventoryFields);
+//const int InventoryFields_Count = DATAFIELDS_COUNT(InventoryFields);
+#define InventoryFields_Count DATAFIELDS_COUNT(InventoryFields)
 
 void Inventory_FreeObject(iObject_t *obj);
 void Accounts_Inventory_Free(void *target){

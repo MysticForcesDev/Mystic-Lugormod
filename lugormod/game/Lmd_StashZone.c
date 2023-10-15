@@ -437,7 +437,7 @@ qboolean lmd_stash_canPickup(gentity_t *stash, gentity_t *player){
 
 	//still recovering from a previous action, cant pick it up.
 	//Ufo:
-	if(player->client->ps.weaponTime > 0 && !(player->client->Lmd.restrict & 16))
+	if(player->client->ps.weaponTime > 0 && !(player->client->Lmd.lmd_restrict & 16))
 		return qfalse;
 
 	//stunned, cant pick it up.

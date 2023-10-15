@@ -3504,7 +3504,7 @@ void Cmd_EngageDuel_f(gentity_t *ent){
 		}
 
 		//Ufo:
-		if(ent->client->Lmd.restrict & 8 || challenged->client->Lmd.restrict & 8) {
+		if(ent->client->Lmd.lmd_restrict & 8 || challenged->client->Lmd.lmd_restrict & 8) {
 			trap_SendServerCommand(ent->s.number, "cp \"^3You cannot duel here.");
 			return;
 		}
@@ -3963,7 +3963,7 @@ qboolean TryGrapple(gentity_t *ent)
 	}
 
 	//Ufo:
-	if (ent->client->Lmd.restrict & 16)
+	if (ent->client->Lmd.lmd_restrict & 16)
 		return qfalse;
 
 	if (ent->client->ps.weapon != WP_SABER && ent->client->ps.weapon != WP_MELEE)

@@ -2378,7 +2378,7 @@ qboolean CheckRestrictWeaponFire(gentity_t *player) {
 //Ufo:
 int EntitiesInBox(const vec3_t mins, const vec3_t maxs, int *list, int maxcount, qboolean logical);
 void CheckRestrictAll(gentity_t *player) {
-	player->client->Lmd.restrict = 0;
+	player->client->Lmd.lmd_restrict = 0;
 	int entList[MAX_GENTITIES];
 	int count = EntitiesInBox(player->r.absmin, player->r.absmax, entList, MAX_GENTITIES, qtrue);
 	int i;
@@ -2386,7 +2386,7 @@ void CheckRestrictAll(gentity_t *player) {
 	for (i = 0; i < count; i++) {
 		ent = GetEnt(entList[i]);
 		if (Q_stricmp(ent->classname, "lmd_restrict") == 0 && !(ent->flags & FL_INACTIVE))
-			player->client->Lmd.restrict |= ent->spawnflags;
+			player->client->Lmd.lmd_restrict |= ent->spawnflags;
 	}
 }
 

@@ -338,7 +338,8 @@ DATAFIELDS_BEGIN(AuthsFields)
 AuthsFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
-const int AuthsFields_Count = DATAFIELDS_COUNT(AuthsFields);
+//const int AuthsFields_Count = DATAFIELDS_COUNT(AuthsFields);
+#define AuthsFields_Count DATAFIELDS_COUNT(AuthsFields)
 
 void Accounts_Auths_Free(void *target) {
 	authFileDataList_t *authList = (authFileDataList_t *)target;

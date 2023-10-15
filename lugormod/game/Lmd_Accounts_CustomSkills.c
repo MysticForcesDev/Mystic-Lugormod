@@ -61,7 +61,8 @@ DATAFIELDS_BEGIN(CustomSkillFields)
 CustomSkillFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
-const int CustomSkillFields_Count = DATAFIELDS_COUNT(CustomSkillFields);
+//const int CustomSkillFields_Count = DATAFIELDS_COUNT(CustomSkillFields);
+#define CustomSkillFields_Count DATAFIELDS_COUNT(CustomSkillFields)
 
 void freeCust(void *data){
 	KeyPairSet_t *set = (KeyPairSet_t *)data;

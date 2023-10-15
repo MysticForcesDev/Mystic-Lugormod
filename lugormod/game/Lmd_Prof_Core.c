@@ -185,8 +185,8 @@ DATAFIELDS_BEGIN(ProfsFields)
 ProfsFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
-const int ProfsFields_Count = DATAFIELDS_COUNT(ProfsFields);
-
+//const int ProfsFields_Count = DATAFIELDS_COUNT(ProfsFields);
+#define ProfsFields_Count DATAFIELDS_COUNT(ProfsFields)
 
 void Lmd_Prof_Alloc(void *target) {
 	profData_t *profData = (profData_t *)target;

@@ -98,20 +98,20 @@ void Lmd_PlayerThink(gentity_t *ent){
 		return;
 
 #ifndef LMD_NEW_JETPACK
-	if (ent->client->Lmd.restrict & 4)
+	if (ent->client->Lmd.lmd_restrict & 4)
 		Jetpack_Off(ent);
 #endif
 
-	if (ent->client->Lmd.restrict & 8 && ent->client->pers.Lmd.persistantFlags & SPF_IONLYDUEL){
+	if (ent->client->Lmd.lmd_restrict & 8 && ent->client->pers.Lmd.persistantFlags & SPF_IONLYDUEL){
 		Cmd_Kill_f(ent);
 	}
 
-	if (ent->client->Lmd.restrict & 32 && ent->client->ps.fd.forcePowerLevel[FP_LEVITATION] > 0) {
+	if (ent->client->Lmd.lmd_restrict & 32 && ent->client->ps.fd.forcePowerLevel[FP_LEVITATION] > 0) {
 		ent->client->Lmd.backupJumpLevel = ent->client->ps.fd.forcePowerLevel[FP_LEVITATION];
 		ent->client->ps.fd.forcePowerLevel[FP_LEVITATION] = 0;
 	}
 
-	if (ent->client->Lmd.backupJumpLevel && !(ent->client->Lmd.restrict & 32)) {
+	if (ent->client->Lmd.backupJumpLevel && !(ent->client->Lmd.lmd_restrict & 32)) {
 		ent->client->ps.fd.forcePowerLevel[FP_LEVITATION] = ent->client->Lmd.backupJumpLevel;
 		ent->client->Lmd.backupJumpLevel = 0;
 	}

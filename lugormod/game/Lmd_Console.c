@@ -92,7 +92,7 @@ void Disp (gentity_t *ent, const char *msg) {
 
 void DispContiguous(gentity_t *ent, const char *msg) {
 	const int contigLength = SERVERCOMMAND_MAX - 9; // -9 print ""
-	static char buf[contigLength];
+	static char buf[SERVERCOMMAND_MAX - 9];//[contigLength];
 	static int len = 0;
 	// +1 linefeed
 	if(msg == NULL || len + strlen(msg) + 1 > contigLength) {

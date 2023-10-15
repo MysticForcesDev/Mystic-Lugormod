@@ -89,7 +89,8 @@ DATAFIELDS_BEGIN(FriendsFields)
 FriendsFields_Base(DEFINE_FIELD_LIST)
 DATAFIELDS_END
 
-const int FriendsFields_Count = DATAFIELDS_COUNT(FriendsFields);
+//const int FriendsFields_Count = DATAFIELDS_COUNT(FriendsFields);
+#define FriendsFields_Count DATAFIELDS_COUNT(FriendsFields)
 
 void Accounts_Friends_AccountLoaded(AccountPtr_t accPtr, void *data) {
 	Account_t *acc = (Account_t*)accPtr;

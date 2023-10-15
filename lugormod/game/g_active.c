@@ -579,7 +579,7 @@ Spectators will only interact with teleporters.
 ============
 */
 //RoboPhred
-inline gentity_t *IterateEnts(gentity_t *from);
+extern gentity_t *IterateEnts(gentity_t *from);
 void	G_TouchTriggers( gentity_t *ent ) {
 	//Ufo:
 	//int			num;
@@ -2214,7 +2214,7 @@ void ClientThink_real( gentity_t *ent ) {
 	//Lugormod cleanups
 
 	//Ufo:
-	if (client->pers.Lmd.persistantFlags & SPF_IONLYDUEL || client->Lmd.restrict & 16) {
+	if (client->pers.Lmd.persistantFlags & SPF_IONLYDUEL || client->Lmd.lmd_restrict & 16) {
 		client->ps.saberHolstered = 2;
 	}
 
@@ -2290,7 +2290,7 @@ void ClientThink_real( gentity_t *ent ) {
 					numUnits = barUnits;
 				if(client->Lmd.stashDeposit.lastDisplayValue != numUnits){
 					client->Lmd.stashDeposit.lastDisplayValue = numUnits;
-					char bar[barUnits + 1];
+					char bar[25];//[barUnits + 1];
 					memset(bar, ' ', sizeof(bar));
 					bar[barUnits] = 0;
 					if(numUnits > 0)
@@ -2500,7 +2500,7 @@ void ClientThink_real( gentity_t *ent ) {
 
 	//Check if ionlyduel is set, and disable the weapon if so
 	//Ufo:
-	if ((ent->client->pers.Lmd.persistantFlags & SPF_IONLYDUEL || ent->client->Lmd.restrict & 16) && ent->client->ps.weaponTime < 200) {
+	if ((ent->client->pers.Lmd.persistantFlags & SPF_IONLYDUEL || ent->client->Lmd.lmd_restrict & 16) && ent->client->ps.weaponTime < 200) {
 		ent->client->ps.weaponTime = 200;
 	}
 	//RoboPhred
@@ -3237,12 +3237,12 @@ void ClientThink_real( gentity_t *ent ) {
 			//RoboPhred:
 			gentity_t *restricted = NULL;
 			//Ufo:
-			if(ent->client->Lmd.restrict & 8) {
+			if(ent->client->Lmd.lmd_restrict & 8) {
 				trap_SendServerCommand(ent->s.number, "cp \"^3You have entered a no-duel zone.\"");
 				restricted = ent;
 				subLen = Q3_INFINITE;
 			}
-			else if(duelAgainst->client->Lmd.restrict & 8) {
+			else if(duelAgainst->client->Lmd.lmd_restrict & 8) {
 				trap_SendServerCommand(duelAgainst->s.number, "cp \"^3You have entered a no-duel zone.\"");
 				restricted = duelAgainst;
 				subLen = Q3_INFINITE;

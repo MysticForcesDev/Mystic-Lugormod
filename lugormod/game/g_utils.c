@@ -1829,7 +1829,7 @@ void TryUse( gentity_t *ent )
 	}
 	
 	//Ufo:
-	if (ent->client->ps.weaponTime > 0 && ((ent->client->pers.Lmd.persistantFlags & SPF_IONLYDUEL) || !(ent->client->Lmd.restrict & 16))
+	if (ent->client->ps.weaponTime > 0 && ((ent->client->pers.Lmd.persistantFlags & SPF_IONLYDUEL) || !(ent->client->Lmd.lmd_restrict & 16))
 	&& (ent->client->ps.torsoAnim != BOTH_BUTTON_HOLD && ent->client->ps.torsoAnim != BOTH_CONSOLE1))
 	{
 		return;

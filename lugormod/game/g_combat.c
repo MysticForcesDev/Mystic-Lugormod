@@ -4722,7 +4722,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker, vec3_
 	}
 
 	//Ufo:
-	if (targ->client && targ->s.number < MAX_CLIENTS && targ->client->Lmd.restrict & 1)
+	if (targ->client && targ->s.number < MAX_CLIENTS && targ->client->Lmd.lmd_restrict & 1)
 		return;
 
 	if (g_gametype.integer == GT_GHOST && mod != MOD_TELEFRAG && !(mod == MOD_FALLING && damage > 200) &&

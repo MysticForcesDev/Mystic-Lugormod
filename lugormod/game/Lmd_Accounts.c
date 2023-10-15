@@ -563,7 +563,7 @@ qboolean Lmd_Accounts_Player_TryLogin(gentity_t *ent, char *username, char *pass
 	return qtrue;
 }
 
-qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister, char **reason);
+extern qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister, char **reason);
 
 qboolean IsValidUsername(char *username, char **reason) {
 	int i = 0, c = 0;
@@ -766,10 +766,10 @@ qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister, char
 	return qtrue;
 }
 
-qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister){
-	char *unused;
-	return IsValidPlayerName(name, ent, isRegister, &unused);
-}
+//qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister){
+//	char *unused;
+//	return IsValidPlayerName(name, ent, isRegister, &unused);
+//}
 
 void Cmd_ChPasswd_f (gentity_t *ent, int iArg){
 	if (trap_Argc() < 2) {

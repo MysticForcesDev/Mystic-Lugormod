@@ -1,9 +1,7 @@
-// Copyright (C) 1999-2000 Id Software, Inc.
-//
-// g_local.h -- local definitions for game module
+#pragma once 
 
-#ifndef __G_LOCAL_H__
-#define __G_LOCAL_H__
+#include "gentity_t.h"
+#include "gclient_t.h"
 
 #include "q_shared.h"
 #include "bg_public.h"
@@ -14,9 +12,6 @@
 #else
 #define GAME_INLINE //none
 #endif
-
-#include "gentity_t.h"
-#include "gclient_t.h"
 
 #include "b_public.h"
 
@@ -1422,5 +1417,3 @@ void trap_Bot_UpdateWaypoints(int wpnum, wpobject_t **wps);
 void trap_Bot_CalculatePaths(int rmg);
 
 #include "../namespace_end.h"
-
-#endif //__G_LOCAL_H__
