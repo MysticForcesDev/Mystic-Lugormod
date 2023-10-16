@@ -147,7 +147,6 @@ void Lmd_PlayerThink(gentity_t *ent){
 void naken_run(void);
 #endif
 void Factions_Save(qboolean full);
-int LoadEntitiesData(const char *filename);
 extern qboolean isSavingMap;
 void Lmd_IPs_Run();
 
