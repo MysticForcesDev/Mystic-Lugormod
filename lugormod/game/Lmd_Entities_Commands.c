@@ -1251,6 +1251,341 @@ void DiagnoseBuilding(gentity_t *ent) {
 
 void Cmd_Entityinfo_t(gentity_t *ent, int iArg);
 
+// grab [entity number]
+// TODO:  using genericvalues 1 & 2 will not always be a good choice
+void Lmdp_Grabbed_Think(gentity_t* self)
+{
+	gentity_t* player = self->activator;
+
+	// validate player
+	if (!player || !player->client || player->client->pers.connected != CON_CONNECTED)
+	{
+		// restore entity thinking
+		if (self->Lmd.oldThink)
+		{
+			self->think = self->Lmd.oldThink;
+			self->nextthink = level.time + self->Lmd.oldNextthink;
+		}
+
+		// reset dummy fields
+		self->Lmd.oldThink = 0;
+		self->Lmd.oldNextthink = 0;
+	}
+	else
+	{
+		// move with player
+		// TODO: longer grabbing arm and snap to entities
+		vec3_t end, start, forward;
+		trace_t tr;
+		int playerNum = player->s.number;
+
+		if (self->flags & FL_GRABORIGIN)
+		{
+			AngleVectors(player->client->ps.viewangles, forward, NULL, NULL);
+			VectorCopy(player->client->ps.origin, start);
+			start[2] += player->client->ps.viewheight;
+			VectorMA(start, 128, forward, end);
+			trap_Trace(&tr, start, NULL, NULL, end, playerNum, MASK_SHOT);
+			VectorAdd(end, self->Lmd.grabOffset, end);
+			SnapVector(end);
+
+			if (self->r.bmodel) {
+				vec3_t dest, temp;
+				VectorAverage(self->r.mins, self->r.maxs, dest);
+				//if (self->r.currentAngles[0] || self->r.currentAngles[1] || self->r.currentAngles[2])
+				{
+					VectorCopy(dest, temp);
+					RotatePointAroundVector(dest, axisDefault[0], temp, self->r.currentAngles[2]);
+					VectorCopy(dest, temp);
+					RotatePointAroundVector(dest, axisDefault[1], temp, self->r.currentAngles[0]);
+					VectorCopy(dest, temp);
+					RotatePointAroundVector(dest, axisDefault[2], temp, self->r.currentAngles[1]);
+				}
+				VectorSubtract(end, dest, dest);
+
+				VectorCopy(dest, self->s.pos.trBase);
+				self->s.pos.trTime = player->s.pos.trTime;
+				self->s.pos.trDuration = level.time + Q3_INFINITE;
+				self->s.pos.trType = TR_STATIONARY;
+
+				//VectorCopy(player->s.pos.trDelta, self->s.pos.trDelta);
+				//SnapVector(self->s.pos.trDelta);
+
+				VectorCopy(dest, self->r.currentOrigin);
+			}
+			else
+			{
+				VectorCopy(end, self->s.pos.trBase);
+				self->s.pos.trTime = player->s.pos.trTime;
+				self->s.pos.trDuration = level.time + Q3_INFINITE;
+
+				VectorCopy(player->s.pos.trDelta, self->s.pos.trDelta);
+				SnapVector(self->s.pos.trDelta);
+
+				VectorCopy(end, self->r.currentOrigin);
+				trap_LinkEntity(self);
+			}
+		}
+
+		if (self->flags & FL_GRABANGLES)
+		{
+			G_SetAngles(self, player->client->ps.viewangles);
+			VectorScale(self->r.currentAngles, 8, self->r.currentAngles);
+			VectorScale(self->s.angles, 8, self->s.angles);
+			VectorScale(self->s.apos.trBase, 8, self->s.apos.trBase);
+		}
+	}
+
+	self->nextthink = level.time + 10;
+}
+
+qboolean Lmdp_EditEntity(gentity_t* ent)
+{
+	SpawnData_t* spawnData = NULL;
+	SpawnData_t* backupData = NULL;
+	gentity_t* newEnt = NULL;
+
+	if (ent == NULL)
+		return qfalse;	// invalid entity or key/value
+
+	spawnData = ent->Lmd.spawnData;	// get entity's spawn data
+	backupData = cloneSpawnstring(spawnData);	// backup ent data
+	newEnt = spawnEntity(ent, spawnData); // respawn ent
+
+	if (newEnt == NULL)
+	{
+		// modified entity failed to spawn, use backup
+		newEnt = spawnEntity(newEnt, backupData);
+		if (newEnt == NULL)
+		{
+			G_FreeEntity(newEnt); // backup failed
+			// TODO: print warning, entity was completely lost
+		}
+		return qfalse;
+	}
+
+	removeSpawnstring(backupData);	// free backup spawndata
+	return qtrue;
+}
+
+int Lmdp_Grabbed_Set(gentity_t* player, gentity_t* ent, int flags, qboolean msg, vec3_t offset, qboolean pickup)
+{
+	/*if (ent->think && ent->think != Lmdp_Grabbed_Think)
+	{
+	Disp(player, "Grabbing is not currently supported for smart entities");
+	return 0;
+	}
+	*/
+	if (ent->think == Lmdp_Grabbed_Think)
+	{
+		// restore entity thinking
+		if (ent->Lmd.oldThink)
+		{
+			ent->think = ent->Lmd.oldThink;
+			ent->nextthink = level.time + ent->Lmd.oldNextthink;
+		}
+		else
+		{
+			ent->think = NULL;
+			ent->nextthink = 0;
+		}
+
+		// reset dummy fields
+		ent->Lmd.oldThink = 0;
+		ent->Lmd.oldNextthink = 0;
+
+		if (ent->flags & FL_GRABORIGIN)
+		{
+			G_SetOrigin(ent, ent->r.currentOrigin);
+
+			Lmd_Entities_setSpawnstringKey(ent->Lmd.spawnData, "origin",
+				va("%i %i %i",
+					(int)ent->r.currentOrigin[0],
+					(int)ent->r.currentOrigin[1],
+					(int)ent->r.currentOrigin[2]));
+		}
+
+		if (ent->flags & FL_GRABANGLES)
+		{
+			Lmd_Entities_deleteSpawnstringKey(ent->Lmd.spawnData, "angle");
+			Lmd_Entities_setSpawnstringKey(ent->Lmd.spawnData, "angles",
+				va("%i %i %i",
+					(int)ent->r.currentAngles[0],
+					(int)ent->r.currentAngles[1],
+					(int)ent->r.currentAngles[2]));
+		}
+		if (!Lmdp_EditEntity(ent))
+		{
+			Disp(player, "^1Entity failed to respawn.");
+			return 0;
+		}
+		ent->flags &= ~(FL_GRABANGLES | FL_GRABORIGIN);
+		ent->s.eFlags &= ~EF_CLIENTSMOOTH;
+		VectorClear(ent->Lmd.grabOffset);
+
+		if (msg)
+			Disp(player, "^3Entity ^2%i ^3dropped.", ent->s.number);
+	}
+	else if (pickup == qtrue)
+	{
+		// backup entity think fields
+		if (ent->think)
+		{
+			ent->Lmd.oldThink = ent->think;
+			ent->Lmd.oldNextthink = ent->nextthink - level.time;
+		}
+		// set activator
+		ent->activator = player;
+
+		// initialize s.pos
+		VectorCopy(ent->s.pos.trBase, player->s.pos.trBase);
+		ent->s.pos.trTime = level.time;
+		ent->s.pos.trType = TR_LINEAR_STOP;
+
+		// replace entity thinking
+		ent->think = Lmdp_Grabbed_Think;
+		ent->nextthink = level.time;
+		ent->flags |= flags;
+		ent->s.eFlags |= EF_CLIENTSMOOTH;
+		VectorCopy(offset, ent->Lmd.grabOffset);
+
+		if (msg)
+			Disp(player, "^3Entity ^2%i ^3grabbed.", ent->s.number);
+	}
+
+	return 1;
+}
+
+void Cmd_Grab_f(gentity_t* ent, int iArg)
+{
+	gentity_t* targ;
+	//vec3_t offs = { 0, 140, 0};
+
+	if (trap_Argc() > 1) {
+		char arg[MAX_STRING_CHARS] = "";
+		trap_Argv(1, arg, sizeof(arg));
+		targ = GetEnt(atoi(arg));
+	}
+	else
+		targ = AimAnyTarget(ent, 8192);
+
+	if (!targ || !targ->inuse) {
+		Disp(ent, "^3Entity not found");
+		return;
+	}
+	if (targ) {
+		if (targ->Lmd.spawnData == NULL)
+			Disp(ent, "^1Only custom entities can be grabbed.");
+		else
+			Lmdp_Grabbed_Set(ent, targ, iArg, qtrue, vec3_origin/*offs*/, qtrue);
+	}
+}
+
+typedef struct SpawnData_s {
+	qboolean canSave;
+	gentity_t* spawned;
+	KeyPairSet_t keys;
+}SpawnData_t;
+
+void Lmdp_Clone(gentity_t* ent, gentity_t* targ, qboolean msg, vec3_t offset)
+{
+	// get target entity
+	if (targ->Lmd.spawnData) {
+		SpawnData_t* spawnData = cloneSpawnstring(targ->Lmd.spawnData);
+
+		if (spawnData) {
+			gentity_t* newEnt = spawnEntity(NULL, spawnData);
+
+			if (newEnt) {
+				newEnt->Lmd.spawnData->canSave = qtrue;
+				if (
+					!Lmdp_Grabbed_Set(ent, targ, FL_GRABORIGIN, qfalse, vec3_origin, qfalse)
+					|| !Lmdp_Grabbed_Set(ent, newEnt, FL_GRABORIGIN, qfalse, offset, qtrue)
+				) {
+					removeSpawnstring(spawnData);
+					G_FreeEntity(newEnt);
+				}
+				else if (msg)
+					Disp(ent, "^3Entity ^2%i ^3spawned.", newEnt->s.number);
+			}
+			else
+			{
+				// TODO: maybe this is not necessary
+				removeSpawnstring(spawnData);
+				G_FreeEntity(newEnt);
+				Disp(ent, "^1Error trying to spawn clone.");
+			}
+		}
+	}
+	else
+		Disp(ent, "^1Error trying to spawn clone.");
+}
+
+void Cmd_Clone_f(gentity_t* ent, int iArg)
+{
+	gentity_t* targ;
+
+	if (trap_Argc() > 1) {
+		char arg[MAX_STRING_CHARS] = "";
+		trap_Argv(1, arg, sizeof(arg));
+		targ = GetEnt(atoi(arg));
+	}
+	else
+		targ = AimAnyTarget(ent, 8192);
+	if (!targ || !targ->inuse) {
+		Disp(ent, "^3Entity not found");
+		return;
+	}
+
+	if (targ)
+		Lmdp_Clone(ent, targ, qtrue, vec3_origin);
+}
+
+// measure
+// a measuring command
+// todo: point to two entities to get their distance
+void Cmd_Measure_f(gentity_t* ent, int iArg)
+{
+	trace_t tr;
+	vec3_t end, start, forward;
+	gclient_t* cl = ent->client;
+
+	AngleVectors(cl->ps.viewangles, forward, NULL, NULL);
+	VectorSet(start, cl->ps.origin[0], cl->ps.origin[1], cl->ps.origin[2] + cl->ps.viewheight);
+	VectorMA(start, Q3_INFINITE, forward, end);
+	trap_Trace(&tr, start, NULL, NULL, end, ent->s.number, MASK_SHOT);
+
+	if (tr.fraction != 1) {
+		//Lmdp_Player_t *player = Lmdp_Players + playerNum;
+		if (VectorCompare(ent->client->Lmd.mark, vec3_origin)) {
+			VectorCopy(tr.endpos, ent->client->Lmd.mark);
+			Disp(ent, "^3Marked location: (%i %i %i)",
+				(int)tr.endpos[0], (int)tr.endpos[1], (int)tr.endpos[2]);
+		}
+		else {
+			VectorCopy(ent->client->Lmd.mark, start);
+			start[0] = tr.endpos[0];
+			VectorCopy(start, end);
+			end[1] = tr.endpos[1];
+			G_TestLine(ent->client->Lmd.mark, start, 0x00000ff, 5000);	// x
+			G_TestLine(start, end, SABER_GREEN, 5000);			// y
+			G_TestLine(end, tr.endpos, SABER_BLUE, 5000);		// z
+			G_TestLine(ent->client->Lmd.mark, tr.endpos, SABER_PURPLE, 5000);
+
+			Disp(ent, "^3(%i %i %i)->(%i %i %i) ^6%i: ^1%i ^2%i ^4%i",
+				(int)ent->client->Lmd.mark[0], (int)ent->client->Lmd.mark[1], (int)ent->client->Lmd.mark[2],
+				(int)tr.endpos[0], (int)tr.endpos[1], (int)tr.endpos[2],
+				(int)Distance(ent->client->Lmd.mark, tr.endpos),
+				(int)(tr.endpos[0] - ent->client->Lmd.mark[0]),
+				(int)(tr.endpos[1] - ent->client->Lmd.mark[1]),
+				(int)(tr.endpos[2] - ent->client->Lmd.mark[2]));
+
+			// clear mark
+			memset(ent->client->Lmd.mark, NULL, sizeof(ent->client->Lmd.mark));
+		}
+	}
+}
+
 cmdEntry_t entityCommandEntries[] = {
 	{"Blowup","[entity number]\nTarget entity is blown up. (Unstable)", Cmd_BlowUp_f, 0, qtrue, 1, 0, 0},
 	{"BlueSpawnPoint","\nMakes the current position a spawn point for blue team players.", Cmd_PlayerSpawnPoint_f, TEAM_BLUE, qtrue, 1, 0, 0},
@@ -1279,5 +1614,9 @@ cmdEntry_t entityCommandEntries[] = {
 	{"Trace", "[entitynumber]\nGet info on entity with number [entitynumber]. If no argument is provided, the target in sight will be investigated.", Cmd_Trace_f, 0, qtrue, 1, 0, 0},
 	{"UseEnt", "[number]\nTarget entity is activated.", Cmd_UseEnt_f, 0, qtrue, 1, 0, 0},
 	{"UseTarg", "<targetname>\nUse a group of entities by targetname.  If no argument is provided, the targetname of the entity in sight will be used.", Cmd_UseEnt_f, 1, qtrue, 1, 0, 0},
+	{"Grab", "[number]\nGrab entity.", Cmd_Grab_f, FL_GRABORIGIN, qtrue, 1, 0, 0},
+	{"Graba", "[number]\nGrab entity (only angles).", Cmd_Grab_f, FL_GRABANGLES, qtrue, 1, 0, 0},
+	{"Clone", "[number]\nClone entity.", Cmd_Clone_f, 0, qtrue, 1, 0, 0},
+	{"Measure", "Measure distance.", Cmd_Measure_f, 0, qtrue, 1, 0, 0},
 	{NULL}
 };

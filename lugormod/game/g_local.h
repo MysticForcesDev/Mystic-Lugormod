@@ -16,7 +16,7 @@
 #include "b_public.h"
 
 //Lugormod
-void Disp (gentity_t *ent,const char *msg);
+void Disp (gentity_t *ent,const char *msg, ...);
 
 //RoboPhred
 void DispContiguous(gentity_t *ent, const char *msg);

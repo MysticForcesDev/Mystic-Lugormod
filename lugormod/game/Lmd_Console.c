@@ -61,14 +61,23 @@ ConsoleEscapeSeq_t consoleEscapes[] = {
 
 #endif
 
-void Disp (gentity_t *ent, const char *msg) {
+void Disp(gentity_t* ent, const char* msg, ...) {
 	const int bufLen = SERVERCOMMAND_MAX - 9; // -10 print "\n"
-
 	unsigned int len = strlen(msg);
-	char buf[MAX_STRING_CHARS];
+	char buf[MAX_STRING_CHARS], msgbuf[MAX_STRING_CHARS];
 	const char *str = msg;
+
+	va_list argptr;
+	char string[1024];
+
+	va_start(argptr, msg);
+	Q_vsnprintf(msgbuf, sizeof(msgbuf), msg, argptr);
+	va_end(argptr);
+	str = msgbuf;
+
 	if(len == 0) {
-		trap_SendServerCommand(ent->s.number, "print \"\n\"");
+		if (ent)
+			trap_SendServerCommand(ent->s.number, "print \"\n\"");
 		return;
 	}
 	while(len > 0) {

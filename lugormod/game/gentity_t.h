@@ -46,6 +46,9 @@ typedef struct SpawnData_s SpawnData_t;
 //RoboPhred
 #define FL_PLAYERSPAWNED		0x10000000 //A player-spawned item
 
+#define FL_GRABANGLES			0x20000000
+#define FL_GRABORIGIN			0x40000000
+
 // movers are things like doors, plats, buttons, etc
 typedef enum {
 	MOVER_POS1,
@@ -354,6 +357,9 @@ struct gentity_s {
 			char *prop;
 			int credits;
 		}UseReq;
+		void(*oldThink)(gentity_t* self);
+		int oldNextthink;
+		vec3_t grabOffset;
 	}Lmd;
 	//RoboPhred
 	qboolean isAutoTargeted; //we were given a targetname automatically
