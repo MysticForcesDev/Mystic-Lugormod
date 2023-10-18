@@ -1327,12 +1327,42 @@ void Lmdp_Grabbed_Think(gentity_t* self)
 			}
 		}
 
-		if (self->flags & FL_GRABANGLES)
+		vec_t newAngle = 0;
+		
+		if (self->flags & FL_GRABX || self->flags & FL_GRABY || self->flags & FL_GRABZ) {
+			// Rotating an entity along any axis is done by rotating the player character horizontally (right/left)
+			newAngle = player->client->ps.viewangles[1] * 4; // X4 muliplier (otherwise, it's too slow)
+			// Snap to axes:
+			while (newAngle < 0.0) {
+				newAngle += 360.0;
+			}
+			while (newAngle > 360.0) {
+				newAngle -= 360.0;
+			}
+			if (newAngle <= 8.0 || newAngle >= 352.0) {
+				newAngle = 0.0;
+			} else if (newAngle >= 82.0 && newAngle <= 98.0) {
+				newAngle = 90.0;
+			} else if (newAngle >= 172.0 && newAngle <= 188.0) {
+				newAngle = 180.0;
+			} else if (newAngle >= 262.0 && newAngle <= 278.0) {
+				newAngle = 270.0;
+			}
+		}
+
+		if (self->flags & FL_GRABX)
 		{
-			G_SetAngles(self, player->client->ps.viewangles);
-			VectorScale(self->r.currentAngles, 8, self->r.currentAngles);
-			VectorScale(self->s.angles, 8, self->s.angles);
-			VectorScale(self->s.apos.trBase, 8, self->s.apos.trBase);
+			self->r.currentAngles[0] = self->s.angles[0] = self->s.apos.trBase[0] = newAngle;
+		}
+
+		if (self->flags & FL_GRABY)
+		{
+			self->r.currentAngles[2] = self->s.angles[2] = self->s.apos.trBase[2] = newAngle;
+		}
+
+		if (self->flags & FL_GRABZ)
+		{
+			self->r.currentAngles[1] = self->s.angles[1] = self->s.apos.trBase[1] = newAngle;
 		}
 	}
 
@@ -1409,7 +1439,7 @@ int Lmdp_Grabbed_Set(gentity_t* player, gentity_t* ent, int flags, qboolean msg,
 					(int)ent->r.currentOrigin[2]));
 		}
 
-		if (ent->flags & FL_GRABANGLES)
+		if (ent->flags & FL_GRABX || ent->flags & FL_GRABY || ent->flags & FL_GRABZ)
 		{
 			Lmd_Entities_deleteSpawnstringKey(ent->Lmd.spawnData, "angle");
 			Lmd_Entities_setSpawnstringKey(ent->Lmd.spawnData, "angles",
@@ -1418,12 +1448,13 @@ int Lmdp_Grabbed_Set(gentity_t* player, gentity_t* ent, int flags, qboolean msg,
 					(int)ent->r.currentAngles[1],
 					(int)ent->r.currentAngles[2]));
 		}
+
 		if (!Lmdp_EditEntity(ent))
 		{
 			Disp(player, "^1Entity failed to respawn.");
 			return 0;
 		}
-		ent->flags &= ~(FL_GRABANGLES | FL_GRABORIGIN);
+		ent->flags &= ~(FL_GRABX | FL_GRABY | FL_GRABZ | FL_GRABORIGIN);
 		ent->s.eFlags &= ~EF_CLIENTSMOOTH;
 		VectorClear(ent->Lmd.grabOffset);
 
@@ -1445,6 +1476,9 @@ int Lmdp_Grabbed_Set(gentity_t* player, gentity_t* ent, int flags, qboolean msg,
 		VectorCopy(ent->s.pos.trBase, player->s.pos.trBase);
 		ent->s.pos.trTime = level.time;
 		ent->s.pos.trType = TR_LINEAR_STOP;
+
+		// initialize r.currentAngles
+		VectorCopy(ent->s.angles, ent->r.currentAngles);
 
 		// replace entity thinking
 		ent->think = Lmdp_Grabbed_Think;
@@ -1643,9 +1677,11 @@ cmdEntry_t entityCommandEntries[] = {
 	{"UseEnt", "[number]\nTarget entity is activated.", Cmd_UseEnt_f, 0, qtrue, 1, 0, 0},
 	{"UseTarg", "<targetname>\nUse a group of entities by targetname.  If no argument is provided, the targetname of the entity in sight will be used.", Cmd_UseEnt_f, 1, qtrue, 1, 0, 0},
 	{"Grab", "[number]\nGrab entity.", Cmd_Grab_f, FL_GRABORIGIN, qtrue, 1, 0, 0},
-	{"GrabOffsetInc", "\nIncrease the distace between the grabbed entity and the player.", Cmd_GrabOffsetInc_f, 0, qtrue, 1, 0, 0},
-	{"GrabOffsetDec", "\nDecrease the distace between the grabbed entity and the player.", Cmd_GrabOffsetDec_f, 0, qtrue, 1, 0, 0},
-	{"Graba", "[number]\nGrab entity (only angles).", Cmd_Grab_f, FL_GRABANGLES, qtrue, 1, 0, 0},
+	{"GrabOffsetIncrease", "\nIncrease the distance between the grabbed entity and the player.", Cmd_GrabOffsetInc_f, 0, qtrue, 1, 0, 0},
+	{"GrabOffsetDecrease", "\nDecrease the distance between the grabbed entity and the player.", Cmd_GrabOffsetDec_f, 0, qtrue, 1, 0, 0},
+	{"GrabX", "[number]\nGrab entity, and rotate it along the X axis.", Cmd_Grab_f, FL_GRABX, qtrue, 1, 0, 0},
+	{"GrabY", "[number]\nGrab entity, and rotate it along the Y axis.", Cmd_Grab_f, FL_GRABY, qtrue, 1, 0, 0},
+	{"GrabZ", "[number]\nGrab entity, and rotate it along the Z axis.", Cmd_Grab_f, FL_GRABZ, qtrue, 1, 0, 0},
 	{"Clone", "[number]\nClone entity.", Cmd_Clone_f, 0, qtrue, 1, 0, 0},
 	{"Measure", "Measure distance.", Cmd_Measure_f, 0, qtrue, 1, 0, 0},
 	{NULL}
