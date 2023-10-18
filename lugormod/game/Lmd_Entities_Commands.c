@@ -1284,7 +1284,7 @@ void Lmdp_Grabbed_Think(gentity_t* self)
 			AngleVectors(player->client->ps.viewangles, forward, NULL, NULL);
 			VectorCopy(player->client->ps.origin, start);
 			start[2] += player->client->ps.viewheight;
-			VectorMA(start, 128, forward, end);
+			VectorMA(start, player->client->Lmd.grabOffset, forward, end);
 			trap_Trace(&tr, start, NULL, NULL, end, playerNum, MASK_SHOT);
 			VectorAdd(end, self->Lmd.grabOffset, end);
 			SnapVector(end);
@@ -1370,6 +1370,10 @@ qboolean Lmdp_EditEntity(gentity_t* ent)
 
 int Lmdp_Grabbed_Set(gentity_t* player, gentity_t* ent, int flags, qboolean msg, vec3_t offset, qboolean pickup)
 {
+	// The distance between the grabbed entity and the player will be 128, initially
+	// (Can be increased with /GrabOffsetInc and decreased with /GrabOffsetDec)
+	player->client->Lmd.grabOffset = 128;
+
 	/*if (ent->think && ent->think != Lmdp_Grabbed_Think)
 	{
 	Disp(player, "Grabbing is not currently supported for smart entities");
@@ -1478,6 +1482,30 @@ void Cmd_Grab_f(gentity_t* ent, int iArg)
 			Disp(ent, "^1Only custom entities can be grabbed.");
 		else
 			Lmdp_Grabbed_Set(ent, targ, iArg, qtrue, vec3_origin/*offs*/, qtrue);
+	}
+}
+
+// Increase the distance between the grabbed entity and the player
+void Cmd_GrabOffsetInc_f(gentity_t* player)
+{
+	if (player->client->Lmd.grabOffset >= 1024) {
+		player->client->Lmd.grabOffset = 1024;
+	} else if (player->client->Lmd.grabOffset < 0) {
+		player->client->Lmd.grabOffset = 0;
+	} else {
+		player->client->Lmd.grabOffset += 8;
+	}
+}
+
+// Decrease the distance between the grabbed entity and the player
+void Cmd_GrabOffsetDec_f(gentity_t* player)
+{
+	if (player->client->Lmd.grabOffset > 1024) {
+		player->client->Lmd.grabOffset = 1024;
+	} else if (player->client->Lmd.grabOffset <= 0) {
+		player->client->Lmd.grabOffset = 0;
+	} else {
+		player->client->Lmd.grabOffset -= 8;
 	}
 }
 
@@ -1615,6 +1643,8 @@ cmdEntry_t entityCommandEntries[] = {
 	{"UseEnt", "[number]\nTarget entity is activated.", Cmd_UseEnt_f, 0, qtrue, 1, 0, 0},
 	{"UseTarg", "<targetname>\nUse a group of entities by targetname.  If no argument is provided, the targetname of the entity in sight will be used.", Cmd_UseEnt_f, 1, qtrue, 1, 0, 0},
 	{"Grab", "[number]\nGrab entity.", Cmd_Grab_f, FL_GRABORIGIN, qtrue, 1, 0, 0},
+	{"GrabOffsetInc", "\nIncrease the distace between the grabbed entity and the player.", Cmd_GrabOffsetInc_f, 0, qtrue, 1, 0, 0},
+	{"GrabOffsetDec", "\nDecrease the distace between the grabbed entity and the player.", Cmd_GrabOffsetDec_f, 0, qtrue, 1, 0, 0},
 	{"Graba", "[number]\nGrab entity (only angles).", Cmd_Grab_f, FL_GRABANGLES, qtrue, 1, 0, 0},
 	{"Clone", "[number]\nClone entity.", Cmd_Clone_f, 0, qtrue, 1, 0, 0},
 	{"Measure", "Measure distance.", Cmd_Measure_f, 0, qtrue, 1, 0, 0},
