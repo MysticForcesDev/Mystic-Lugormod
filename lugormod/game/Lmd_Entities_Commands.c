@@ -1352,12 +1352,12 @@ void Lmdp_Grabbed_Think(gentity_t* self)
 
 		if (self->flags & FL_GRABX)
 		{
-			self->r.currentAngles[0] = self->s.angles[0] = self->s.apos.trBase[0] = newAngle;
+			self->r.currentAngles[2] = self->s.angles[2] = self->s.apos.trBase[2] = newAngle;
 		}
 
 		if (self->flags & FL_GRABY)
 		{
-			self->r.currentAngles[2] = self->s.angles[2] = self->s.apos.trBase[2] = newAngle;
+			self->r.currentAngles[0] = self->s.angles[0] = self->s.apos.trBase[0] = newAngle;
 		}
 
 		if (self->flags & FL_GRABZ)
