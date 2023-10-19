@@ -728,7 +728,7 @@ void Cmd_Inventory_f(gentity_t *ent, int iArg){
 	int argc = trap_Argc();
 	char arg[MAX_STRING_CHARS];
 	if(argc < 2){
-		Disp(ent, "^3Usage: Inventory {list ^5[catagory/name] [offset]^3} {use ^2<index/name>^3} {destroy ^2<index/name>^3}");
+		Disp(ent, "^3Usage: Inventory {list ^5[category/name] [offset]^3} {use ^2<index/name>^3} {destroy ^2<index/name>^3}");
 		return;
 	}
 	trap_Argv(1, arg, sizeof(arg));

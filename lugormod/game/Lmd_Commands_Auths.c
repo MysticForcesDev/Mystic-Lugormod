@@ -1193,7 +1193,7 @@ void Auths_DispInfo(gentity_t *ent, authFile_t *file, cmdCategory_t *category) {
 	}
 	else {
 		Disp(ent, 
-			CT_B"Commands included in this catagory\n"
+			CT_B"Commands included in this category\n"
 			CT_B"=====================================================");
 		char seg[2][59];
 		int p;

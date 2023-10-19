@@ -468,7 +468,7 @@ void Cmd_Inventory_f(gentity_t *ent, int iArg){
 	char arg[MAX_STRING_CHARS];
 	if(argc < 2){
 		//destroy <type> destroys all of type, with confirmation.
-		Disp(ent, "^3Usage: Inventory {list ^5[catagory/type] [offset]^3} {use ^2<Index/type>^3} {destroy ^2<Index/type>^3}");
+		Disp(ent, "^3Usage: Inventory {list ^5[category/type] [offset]^3} {use ^2<Index/type>^3} {destroy ^2<Index/type>^3}");
 		return;
 	}
 	trap_Argv(1, arg, sizeof(arg));
@@ -500,7 +500,7 @@ void GenerateInvDocs() {
 	BG_field_t *field;
 	char *str;
 	while(catagory->name) {
-		str = va("Catagory: %s\n\n\n", catagory->name);
+		str = va("Category: %s\n\n\n", catagory->name);
 		trap_FS_Write(str, strlen(str), f);
 		def = catagory->objects;
 		while(def->name) {
