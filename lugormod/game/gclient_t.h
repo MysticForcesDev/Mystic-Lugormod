@@ -535,6 +535,9 @@ struct gclient_s {
 		int invisibleTime;
 		int undyingTime;
 		int backupJumpLevel; // lmd_restrict jump
+
+		vec3_t mark;
+		int grabOffset;
 	}Lmd;
 	unsigned int lastTargetUse;
 	unsigned int infoChanged;

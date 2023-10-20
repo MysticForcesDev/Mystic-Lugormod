@@ -354,6 +354,13 @@ struct gentity_s {
 			char *prop;
 			int credits;
 		}UseReq;
+		void(*oldThink)(gentity_t* self);
+		int oldNextthink;
+		qboolean grabOrigin; // Grab the entity, and move it with the player
+		vec3_t grabOffset; // Distance between the grabbed entity and the player
+		qboolean grabX; // Rotate along the X axis
+		qboolean grabY; // Rotate along the Y axis
+		qboolean grabZ; // Rotate along the Z axis
 	}Lmd;
 	//RoboPhred
 	qboolean isAutoTargeted; //we were given a targetname automatically
