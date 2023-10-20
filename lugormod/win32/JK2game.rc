@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+#include <winres.h>
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -32,7 +32,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\n"
+    "#include <winres.h>\r\n"
     "\0"
 END
 
@@ -73,7 +73,6 @@ BEGIN
             VALUE "FileVersion", "1.0"
             VALUE "InternalName", "Mystic Lugormod"
             VALUE "LegalCopyright", "Copyright (C) 2007-2023"
-            VALUE "LegalTrademarks", "Mystic Lugormod"
             VALUE "OriginalFilename", "jampgamex86.dll"
             VALUE "ProductName", "Mystic Lugormod, Jedi Knight®: Jedi Academy (MP)"
             VALUE "ProductVersion", "1, 0, 1, 0"

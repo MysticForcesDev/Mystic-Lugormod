@@ -193,3 +193,8 @@ pip-log.txt
 #############
 [Bb]uild*/
 cmake-build-*
+
+#############
+## Files generated from resources (e.g. from JK2game.rc)
+#############
+lugormod/win32/RC*
