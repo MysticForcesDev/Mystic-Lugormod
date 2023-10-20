@@ -70,7 +70,7 @@ BEGIN
             VALUE "Comments", "Raven Software, Lugor, RoboPhred, Ufo, Mystic Forces"
             VALUE "CompanyName", "Activision Inc, RoboPhredDev"
             VALUE "FileDescription", "Mystic Lugormod"
-            VALUE "FileVersion", "1.0"
+            VALUE "FileVersion", "1.0.0"
             VALUE "InternalName", "Mystic Lugormod"
             VALUE "LegalCopyright", "Copyright (C) 2007-2023"
             VALUE "OriginalFilename", "jampgamex86.dll"
