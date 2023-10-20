@@ -455,34 +455,27 @@ void hurl (gentity_t *ent, gentity_t *dropped){
 	}
 	vec3_t angles, dir, origin;
 	VectorCopy(ent->client->ps.viewangles, angles);
-	AngleVectors(angles, dir,NULL,NULL);
-	dir[2] = 0;
-	VectorNormalize(dir);
-	VectorMA(ent->client->ps.origin, ent->r.maxs[0] + 30, dir, origin);
-
-	// Change the origin and direction if the path is blocked
-	vec3_t aimingVect;
-	VectorMA(ent->client->ps.origin, Q3_INFINITE, dir, aimingVect);
+	float offsetAngle = 0.0;
 	trace_t tr;
-	// Find out if there's an object right in front of the player (too close)
-	trap_Trace(&tr, ent->client->ps.origin, NULL, NULL, aimingVect, ent->s.number, MASK_SHOT);
-	// Change the angle if necessary
-	float offsetAngle = 45.0;
-	while (
-		tr.fraction != 1.0 // The trace hit something
-		&& !g_entities[tr.entityNum].client // It's not a player (hurling something at a player is allowed)
-		&& Distance(ent->client->ps.origin, tr.endpos) < 60 // The distance is too small to drop the item safely
-		&& offsetAngle <= 360.0 // If no suitable angle was found after 360 degrees, drop the item anyway
-	) {
+	do {
 		angles[YAW] = ent->client->ps.viewangles[YAW] + offsetAngle;
 		AngleVectors(angles, dir, NULL, NULL);
 		dir[ROLL] = 0;
 		VectorNormalize(dir);
 		VectorMA(ent->client->ps.origin, ent->r.maxs[0] + 30, dir, origin);
+		// We'll need to change the origin and direction if the path is blocked
+		vec3_t aimingVect;
 		VectorMA(ent->client->ps.origin, Q3_INFINITE, dir, aimingVect);
+		// Find out if there's an object right in front of the player (too close)
 		trap_Trace(&tr, ent->client->ps.origin, NULL, NULL, aimingVect, ent->s.number, MASK_SHOT);
+		// Change the angle if necessary
 		offsetAngle += 45.0;
-	}
+	} while (
+		tr.fraction != 1.0 // The trace hit something
+		&& !g_entities[tr.entityNum].client // It's not a player (hurling something at a player is allowed)
+		&& Distance(ent->client->ps.origin, tr.endpos) < 60 // The distance is too small to drop the item safely
+		&& offsetAngle <= 360.0 // If no suitable angle was found after 360 degrees, drop the item anyway
+	);
 
 	G_SetOrigin(dropped, origin); 
 	VectorMA(ent->client->ps.velocity, 30, dir, dropped->s.pos.trDelta);
