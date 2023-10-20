@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+#include <winres.h>
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -32,7 +32,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\n"
+    "#include <winres.h>\r\n"
     "\0"
 END
 
@@ -51,7 +51,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,4,8,3
+ FILEVERSION 1,0,0,0
  PRODUCTVERSION 1,0,1,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
@@ -67,15 +67,14 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "Raven Software, Lugor, RoboPhred"
+            VALUE "Comments", "Raven Software, Lugor, RoboPhred, Ufo, Mystic Forces"
             VALUE "CompanyName", "Activision Inc, RoboPhredDev"
-            VALUE "FileDescription", "Lugormod U#"
-            VALUE "FileVersion", "2.4.8.3"
-            VALUE "InternalName", "Lugormod U#"
-            VALUE "LegalCopyright", "Copyright (C) 2007-2015"
-            VALUE "LegalTrademarks", "Lugormod"
+            VALUE "FileDescription", "Mystic Lugormod"
+            VALUE "FileVersion", "1.0"
+            VALUE "InternalName", "Mystic Lugormod"
+            VALUE "LegalCopyright", "Copyright (C) 2007-2023"
             VALUE "OriginalFilename", "jampgamex86.dll"
-            VALUE "ProductName", "Lugormod U#, Jedi Knight®: Jedi Academy (MP)"
+            VALUE "ProductName", "Mystic Lugormod, Jedi Knight®: Jedi Academy (MP)"
             VALUE "ProductVersion", "1, 0, 1, 0"
         END
     END

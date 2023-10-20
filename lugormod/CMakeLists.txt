@@ -252,7 +252,19 @@ else()
 	endif()
 endif()
 
+if (WIN32)
+    set(RESOURCEFILES
+        "win32/AutoVersion.h"
+        "win32/resource.h"
+        "win32/JK2game.rc"
+    )
+endif()
+
+if(WIN32)
+set(GAME_SRC ${GAME_SRC} ${GAME_HEADER} ${RESOURCEFILES})
+else()
 set(GAME_SRC ${GAME_SRC} ${GAME_HEADER})
+endif()
 
 
 if(WIN32)

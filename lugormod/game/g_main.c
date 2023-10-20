@@ -1,7 +1,7 @@
 // Copyright (C) 1999-2000 Id Software, Inc.
 //
 
-#define LMD_VER_ENC_LOCK
+//#define LMD_VER_ENC_LOCK
 
 //Alpha: \xC6\xED\xF5\xF1\xE6
 //Beta: \xC7\xE6\xF9\xEA
@@ -18,10 +18,10 @@ const int verMinor = 0;
 const int verRev = 0;
 const int verBuild = 91;
 #else
-const int verMajor = 2;
-const int verMinor = 4;
-const int verRev = 8;
-const int verBuild = 4;
+const int verMajor = 1;
+const int verMinor = 0;
+const int verRev = 0;
+const int verBuild = 0;
 #endif
 
 #ifdef LMD_EXPERIMENTAL
@@ -44,6 +44,7 @@ const char *verMods =
 
 #else
 
+#define LUGORMODVERSION_CORE "1.0"
 #ifdef LMD_EXPERIMENTAL
 #define LUGORMODVERSION LUGORMODVERSION_CORE" Alpha"
 #else
@@ -618,7 +619,7 @@ static cvarTable_t		gameCvarTable[] = {
 	// noset vars
 	{ &g_uptime, "serveruptime", "0", CVAR_ROM|CVAR_SERVERINFO,0,qfalse},
 #ifndef LMD_VER_ENC_LOCK
-	{ &Lugormod_Version, "Lugormod_Version", LUGORMODVERSION, CVAR_ROM|CVAR_SERVERINFO,0,qfalse},
+	{ &Lugormod_Version, "MysticLMD_Version", LUGORMODVERSION, CVAR_ROM|CVAR_SERVERINFO, 0, qfalse},
 	{ &gamename, "gamename", GAMEVERSION , CVAR_SERVERINFO | CVAR_ROM, 0, qfalse  },
 #endif
 	{ NULL, "gamedate", __DATE__ , CVAR_ROM, 0, qfalse  },
@@ -4692,7 +4693,7 @@ void CheckCvars( void ) {
 		//=========================================================
 		trap_Cvar_Set(cvar, value);
 #else
-		trap_Cvar_Set("Lugormod_Version", LUGORMODVERSION);
+		trap_Cvar_Set("MysticLMD_Version", LUGORMODVERSION);
 		trap_Cvar_Set("gamename", GAMEVERSION);
 #endif
 
