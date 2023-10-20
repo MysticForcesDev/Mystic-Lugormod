@@ -2686,6 +2686,7 @@ void ClientUserinfoChanged(int clientNum) {
 	strcpy(saberName, client->sess.saberType[0]);
 	strcpy(saber2Name, client->sess.saberType[1]);
 
+	/*Done in ClientSpawn now.
 	// set max health
 	if (g_gametype.integer == GT_SIEGE && client->siegeClass != -1)
 	{
@@ -2709,6 +2710,7 @@ void ClientUserinfoChanged(int clientNum) {
 		client->pers.maxHealth = 100;
 	}
 	client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
+	*/
 
 	/*	NOTE: all client side now
 
