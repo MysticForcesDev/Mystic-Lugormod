@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,0
- PRODUCTVERSION 1,0,1,0
+ FILEVERSION 1,0,1,0 // Mystic Lugormod version
+ PRODUCTVERSION 1,0,1,0 // JKA Version, do not change
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -70,12 +70,12 @@ BEGIN
             VALUE "Comments", "Raven Software, Lugor, RoboPhred, Ufo, Mystic Forces"
             VALUE "CompanyName", "Activision Inc, RoboPhredDev"
             VALUE "FileDescription", "Mystic Lugormod"
-            VALUE "FileVersion", "1.0.0"
+            VALUE "FileVersion", "1.0.1" // Mystic Lugormod version
             VALUE "InternalName", "Mystic Lugormod"
             VALUE "LegalCopyright", "Copyright (C) 2007-2023"
             VALUE "OriginalFilename", "jampgamex86.dll"
             VALUE "ProductName", "Mystic Lugormod, Jedi Knight®: Jedi Academy (MP)"
-            VALUE "ProductVersion", "1, 0, 1, 0"
+            VALUE "ProductVersion", "1, 0, 1, 0" // JKA Version, do not change
         END
     END
     BLOCK "VarFileInfo"

@@ -728,10 +728,13 @@ qboolean IsValidName(char *name) {
 	return qtrue;
 }
 
+// "reason" is an output argument. If you're not interested in knowing the reason, you can pass NULL.
 qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister, char** reason) {
 	char cmpName[MAX_NETNAME];
 
-	*reason = NULL;
+	if (reason != NULL) {
+		*reason = NULL;
+	}
 
 	if (ent && ent->r.svFlags & SVF_BOT) {
 		return qtrue;
@@ -743,7 +746,9 @@ qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister, char
 
 	if (Q_stricmpname(name, "Padawan") == 0){
 		if (isRegister || (ent && ent->client->pers.Lmd.account)) {
-			*reason = "Registered accounts cannot use the name \'Padawan\'";
+			if (reason != NULL) {
+				*reason = "Registered accounts cannot use the name \'Padawan\'";
+			}
 			return qfalse;
 		}
 
@@ -757,7 +762,9 @@ qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister, char
 		Account_t *acc = Accounts_GetByName(cmpName);
 		if (acc || G_GetBotInfoByName(cmpName)){
 			if (!ent || ent->client->pers.Lmd.account != acc) {
-				*reason = "This name is already in use";
+				if (reason != NULL) {
+					*reason = "This name is already in use";
+				}
 				return qfalse;
 			}
 		}
@@ -765,11 +772,6 @@ qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister, char
 
 	return qtrue;
 }
-
-//qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister){
-//	char *unused;
-//	return IsValidPlayerName(name, ent, isRegister, &unused);
-//}
 
 void Cmd_ChPasswd_f (gentity_t *ent, int iArg){
 	if (trap_Argc() < 2) {

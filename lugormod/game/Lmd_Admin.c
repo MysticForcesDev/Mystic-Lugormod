@@ -21,7 +21,7 @@ int ClientNumberFromString( gentity_t *to, char *s );
 
 void Professions_SetDefaultSkills(Account_t *acc, int prof);
 void ClientCleanName(const char *in, char *out, int outSize);
-extern qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister);
+extern qboolean IsValidPlayerName(char *name, gentity_t *ent, qboolean isRegister, char **reason);
 void Cmd_AccountEdit_f(gentity_t *ent, int iArg){
 	Account_t *acc;
 	char arg[MAX_STRING_CHARS];
@@ -50,7 +50,7 @@ void Cmd_AccountEdit_f(gentity_t *ent, int iArg){
 	trap_Argv(3, val, sizeof(val));
 	if(Q_stricmp(arg, "name") == 0){
 		ClientCleanName((const char *)val, arg, sizeof(arg));
-		if(!IsValidPlayerName(arg, NULL, qfalse)){
+		if(!IsValidPlayerName(arg, NULL, qfalse, NULL)){
 			Disp(ent, "^3That name is invalid or already in use.");
 			return;
 		}
@@ -857,7 +857,7 @@ void Cmd_RenamePlayer_f(gentity_t *ent, int iArg){
 	if(i < 0)
 		return; //ClientNumberFromString gives the player the error message.
 	name = ConcatArgs(2);
-	if(IsValidPlayerName(name, NULL, qfalse) == qfalse) {
+	if(IsValidPlayerName(name, NULL, qfalse, NULL) == qfalse) {
 		Disp(ent, "^3Name is not valid.");
 		return;
 	}
