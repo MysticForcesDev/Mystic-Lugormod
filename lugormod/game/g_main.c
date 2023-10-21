@@ -20,7 +20,7 @@ const int verBuild = 91;
 #else
 const int verMajor = 1;
 const int verMinor = 0;
-const int verRev = 0;
+const int verRev = 1;
 const int verBuild = 0;
 #endif
 
@@ -44,7 +44,7 @@ const char *verMods =
 
 #else
 
-#define LUGORMODVERSION_CORE "1.0.0"
+#define LUGORMODVERSION_CORE "1.0.1"
 #ifdef LMD_EXPERIMENTAL
 #define LUGORMODVERSION LUGORMODVERSION_CORE" Alpha"
 #else
