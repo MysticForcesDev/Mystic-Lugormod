@@ -44,7 +44,7 @@ const char *verMods =
 
 #else
 
-#define LUGORMODVERSION_CORE "1.0"
+#define LUGORMODVERSION_CORE "1.0.0"
 #ifdef LMD_EXPERIMENTAL
 #define LUGORMODVERSION LUGORMODVERSION_CORE" Alpha"
 #else
