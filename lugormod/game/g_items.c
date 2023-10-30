@@ -2640,7 +2640,9 @@ void Touch_Item (gentity_t *ent, gentity_t *other, trace_t *trace) {
 		return;
 	}
 
-	if (ent->s.eFlags & EF_NODRAW)
+	// If the entity is not spawned, don't give the item to the player,
+	// unless the entity has a targetname (fixes target_give)
+	if (ent->s.eFlags & EF_NODRAW && ent->targetname == NULL)
 	{
 		return;
 	}
