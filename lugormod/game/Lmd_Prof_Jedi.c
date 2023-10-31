@@ -212,7 +212,7 @@ STD_FORCEPOWER_FUNCS(Speed, FP_SPEED)
 const char *jediSkill_Neutral_Seeing_Descr[] = {
 	"Gain the Seeing force power.  Lasts 10 seconds",
 	"Increase the Seeing duration to 20 seconds.",
-	"Increase the Seeing duration to 30 seconds.  Sense the money stash with a blue beam.",
+	"Increase the Seeing duration to 30 seconds.  Sense money stashes with a blue beam.",
 	"Increase the Seeing duration to 40 seconds.",
 	"Increase the Seeing duration to 60 seconds.",
 	NULL
@@ -242,7 +242,7 @@ profSkill_t jediSkill_Neutral_Subskills[] = {
 	Lmd_Prof_Jedi_GetSkill_Speed, Lmd_Prof_Jedi_CanSetSkill_Speed, Lmd_Prof_Jedi_SetSkill_Speed
 	},
 	{ //jediSkill_Neutral_Seeing,
-	"Seeing", "Locate others through barriers, and find the money stash.  Sense others using Mind Trick",
+	"Seeing", "Locate others through barriers, and find money stashes.  Sense others using Mind Trick",
 	jediSkill_Neutral_Seeing_Descr, 0, {0, 3}, SkillPoints_Default, //Ufo:
 	Lmd_Prof_Jedi_GetSkill_Seeing, Lmd_Prof_Jedi_CanSetSkill_Seeing, Lmd_Prof_Jedi_SetSkill_Seeing
 	},

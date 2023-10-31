@@ -959,7 +959,7 @@ void Cmd_Stash_f(gentity_t *ent, int iArg){
 	else if(check == -1)
 		Disp(ent, "^3There is currently a money stash spawned");
 	else{
-		Disp(ent, va("%s^7 ^3is holding onto the money stash", g_entities[check].client->pers.netname));
+		Disp(ent, va("%s^7 ^3is holding onto a money stash", g_entities[check].client->pers.netname));
 	}
 }
 

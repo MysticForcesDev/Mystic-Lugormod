@@ -682,7 +682,7 @@ profSkill_t mercSkills[] = {
 	Lmd_Prof_Merc_GetSkill_FlameBurst, Lmd_Prof_Merc_CanSetSkill_FlameBurst, Lmd_Prof_Merc_SetSkill_FlameBurst
 	},
 	{ //mercSkill_StashRange,
-	"StashRange", "Use binoculars to locate the money stash.  The binoculars will beep when a stash is nearby, and beep more rapidly as you aim at it.",
+	"StashRange", "Use binoculars to locate money stashes.  The binoculars will beep when a stash is nearby, and beep more rapidly as you aim at it.",
 	mercSkill_StashRange_Descr, 0, SkillLevels_Default, SkillPoints_Default, //SK_MERC_BINOCULARS,
 	Lmd_Prof_Merc_GetSkill_StashRange, Lmd_Prof_Merc_CanSetSkill_StashRange, Lmd_Prof_Merc_SetSkill_StashRange,
 	},

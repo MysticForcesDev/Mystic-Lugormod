@@ -339,8 +339,8 @@ void depositMoneyStash(gentity_t *ent){
 	PlayerAcc_SetCredits(ent, PlayerAcc_GetCredits(ent) + amount);
 
 	trap_SendServerCommand(ent->s.number, va("cp \"^3You received ^2%i^3 credits.\"", amount));
-	trap_SendServerCommand(-1, va("print \"%s ^3deposited the money stash.\n\"", ent->client->pers.netname));
-	G_LogPrintf("%s deposited the money stash. CR %i.\n", ent->client->pers.netname, amount);
+	trap_SendServerCommand(-1, va("print \"%s ^3deposited a money stash.\n\"", ent->client->pers.netname));
+	G_LogPrintf("%s deposited a money stash. CR %i.\n", ent->client->pers.netname, amount);
 }
 
 void money_dispenser_use(gentity_t *self, gentity_t *other, gentity_t *activator){
@@ -396,7 +396,7 @@ void money_dispenser_use(gentity_t *self, gentity_t *other, gentity_t *activator
 			activator->client->ps.hackingBaseTime = MONEY_HACKING_TIME;
 			VectorCopy(activator->client->ps.viewangles, activator->client->hackingAngles);
 			if(self->activator != activator || self->aimDebounceTime < level.time) {
-				trap_SendServerCommand(-1, va("print \"%s ^3started depositing money stash.\n\"",	activator->client->pers.netname));
+				trap_SendServerCommand(-1, va("print \"%s ^3started depositing a money stash.\n\"",	activator->client->pers.netname));
 				self->aimDebounceTime = level.time + 3000;
 			}
 			self->activator = activator;
@@ -529,7 +529,7 @@ void dropMoneyStash_Old(gentity_t *ent){
 	dropped->r.contents = CONTENTS_TRIGGER|CONTENTS_SOLID;
 	ent->client->ps.powerups[PW_NEUTRALFLAG] = 0;
 	ent->client->Lmd.moneyStash = NULL;
-	trap_SendServerCommand(-1, va("print \"%s ^3dropped the money stash.\n\"", ent->client->pers.netname));
+	trap_SendServerCommand(-1, va("print \"%s ^3dropped a money stash.\n\"", ent->client->pers.netname));
 	ent->client->ps.eFlags2 &= ~EF2_CANSEE;
 }
 
