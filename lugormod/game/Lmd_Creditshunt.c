@@ -199,6 +199,9 @@ void money_stash_touch (gentity_t *self, gentity_t *other, trace_t *trace){
 	//RoboPhred: number of times picked up
 	self->genericValue1++;
 
+	// Clear the "respawn timeout", to make sure the stash doesn't reset while the player is holding it
+	self->timestamp = 0;
+
 	other->client->ps.powerups[PW_NEUTRALFLAG] = INT_MAX;
 	//other->client->ps.isJediMaster = qtrue;
 	//G_GlobalSound( other, CHAN_ANNOUNCER, G_SoundIndex( "sound/effects/mpalarm" ) );
