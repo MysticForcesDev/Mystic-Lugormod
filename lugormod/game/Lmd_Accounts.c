@@ -172,6 +172,138 @@ void HiScore (gentity_t *ent, int field){
 
 }
 
+typedef struct hiratio_s {
+	Account_t* acc;
+	int numerator;
+	int denominator;
+	float ratio;
+} hiratio_t;
+
+void HiRatio(gentity_t* ent, int field) {
+	hiratio_t list[10];
+	memset(list, 0, sizeof(list));
+	int num_accounts = Accounts_Count();
+	int numerator, denominator;
+	float ratio;
+	int shiftIndex;
+	Account_t* acc;
+	for (int i = 0; i < 10; i++) {
+		list[i].ratio = -INFINITY;
+	}
+	for (int i = 0; i < num_accounts; i++) {
+		acc = Accounts_Get(i);
+		if (Accounts_Prof_GetProfession(acc) == PROF_ADMIN)
+			continue;
+		switch (field) {
+		case RATIO_DUEL_WIN_LOSS:
+			if (Accounts_Prof_GetProfession(acc) == PROF_MERC) {
+				continue; // Mercenaries cannot duel
+			}
+			numerator = Accounts_Stats_GetDuelsWon(acc);
+			denominator = Accounts_Stats_GetDuels(acc) - numerator;
+			ratio = (float)numerator / max(denominator, 1); // Do not divide by 0
+			break;
+		case RATIO_HIT_MISS:
+			if (Accounts_Prof_GetProfession(acc) == PROF_JEDI) {
+				// Force users cannot use weapons, so they can't get shots,
+				// but they can get hits without shots (by deflecting projectiles with their lightsaber),
+				// so they're excluded from the accuracy ratio (hit/miss)
+				continue;
+			}
+			numerator = Accounts_Stats_GetHits(acc);
+			denominator = Accounts_Stats_GetShots(acc) - numerator;
+			ratio = (float)numerator / max(denominator, 1); // Do not divide by 0
+			break;
+		default: // RATIO_KILL_DEATH
+			numerator = Accounts_Stats_GetKills(acc);
+			denominator = Accounts_Stats_GetDeaths(acc);
+			ratio = (float)numerator / max(denominator, 1); // Do not divide by 0
+			break;
+		}
+		shiftIndex = -1;
+		for (int j = 0; j < 10; j++) {
+			if (list[j].ratio < ratio) {
+				shiftIndex = j;
+				break;
+			}
+		}
+		if (shiftIndex < 0)
+			continue;
+		if (shiftIndex < 9) {
+			//shift list array members from shiftIndex to 9 down.
+			memcpy((list + shiftIndex + 1), list + shiftIndex, ((10 - shiftIndex) - 1) * sizeof(list[0]));
+		}
+		list[shiftIndex].acc = acc;
+		list[shiftIndex].numerator = numerator;
+		list[shiftIndex].denominator = denominator;
+		list[shiftIndex].ratio = ratio;
+	}
+
+	char dstr[MAX_STRING_CHARS];
+	char name[MAX_NAME_LENGTH];
+	char* ptr;
+
+	for (int i = 0; i < 10; i++) {
+		if (!list[i].acc)
+			break;
+		ptr = Accounts_GetName(list[i].acc);
+		if (!ptr)
+			Q_strncpyz(name, "^3<^1ERROR^3>", sizeof(name));
+		else
+			Q_strncpyz(name, ptr, sizeof(name));
+		Q_CleanStrC(name); //needed for amount to line up
+		Q_strncpyz(dstr, va("^3%-32s", name), sizeof(dstr));
+		switch (field) {
+		case RATIO_DUEL_WIN_LOSS:
+			if (list[i].denominator == 0) {
+				Q_strcat(
+					dstr,
+					sizeof(dstr),
+					va(" ^2 -   ^3(^2%i ^3Wins, ^2%i ^3Losses)", list[i].numerator, list[i].denominator)
+				);
+			} else { // list[i].denominator != 0
+				Q_strcat(
+					dstr,
+					sizeof(dstr),
+					va(" ^2%.2f ^3(^2%i ^3Wins, ^2%i ^3Losses)", list[i].ratio, list[i].numerator, list[i].denominator)
+				);
+			}
+			break;
+		case RATIO_HIT_MISS:
+			if (list[i].denominator == 0) {
+				Q_strcat(
+					dstr,
+					sizeof(dstr),
+					va(" ^2 -   ^3(^2%i ^3Hits, ^2%i ^3Misses)", list[i].numerator, list[i].denominator)
+				);
+			} else { // list[i].denominator != 0
+				Q_strcat(
+					dstr,
+					sizeof(dstr),
+					va(" ^2%.2f ^3(^2%i ^3Hits, ^2%i ^3Misses)", list[i].ratio, list[i].numerator, list[i].denominator)
+				);
+			}
+			break;
+		default: // RATIO_KILL_DEATH
+			if (list[i].denominator == 0) {
+				Q_strcat(
+					dstr,
+					sizeof(dstr),
+					va(" ^2 -   ^3(^2%i ^3Kills, ^2%i ^3Deaths)", list[i].numerator, list[i].denominator)
+				);
+			} else { // list[i].denominator != 0
+				Q_strcat(
+					dstr,
+					sizeof(dstr),
+					va(" ^2%.2f ^3(^2%i ^3Kills, ^2%i ^3Deaths)", list[i].ratio, list[i].numerator, list[i].denominator)
+				);
+			}
+			break;
+		}
+		Disp(ent, dstr);
+	}
+}
+
 int Jedi_GetAccSide(Account_t *acc);
 void GetStats(gentity_t *ent, Account_t *acc){
 	int prof, time, lvl, authrank;

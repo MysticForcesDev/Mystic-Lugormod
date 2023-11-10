@@ -58,7 +58,7 @@ void Time_ToHumanString(unsigned int time, char *str, unsigned int sze) {
 	time -= minutes * 60;
 
 	unsigned int month = Time_MonthFromDays(&days, &year);
-	Q_strncpyz(str, va("%u-%u-%u, %u:%.2u:%.2u", month, days, year, hours, minutes, time), sze);
+	Q_strncpyz(str, va("%04u-%02u-%02u %02u:%02u:%02u", year, month, days, hours, minutes, time), sze);
 }
 
 void Time_ToString(unsigned int time, char *str, unsigned int sze) {

@@ -6,6 +6,7 @@
 #include "Lmd_Accounts_Property.h"
 #include "Lmd_Commands_Data.h"
 #include "Lmd_Commands_Auths.h"
+#include "Lmd_Commands_Core.h"
 #include "Lmd_Professions.h"
 #include "Lmd_EntityCore.h"
 #include "Lmd_PlayerActions.h"
@@ -26,6 +27,7 @@ void       TossClientWeapon (gentity_t *self, vec3_t direction, float speed);
 void       BG_CycleInven   (playerState_t *ps, int direction); //bg_misc.c
 void       Jedi_Decloak    (gentity_t *self );
 void       HiScore         (gentity_t *ent, int field);
+void       HiRatio         (gentity_t* ent, int field);
 void       Cmd_Say_f       (gentity_t *ent, int mode, qboolean arg0 );
 
 extern gentity_t  *g_bestKing;
@@ -1064,11 +1066,22 @@ cmdEntry_t playerCommandEntries[] = {
 	{"factions", "View and interact with player factions." , Cmd_Factions_f, 0, qfalse, 0, 0, 0, 0}, 
 	//{"fnord","\nIf you don't have anything to say, but you want to say it anyway, this is the command for you.\nThe Fnorder Program was originally written by Steve Jackson and Creede Lambard.\nIt is used in the Lugormod with permission from Steve Jackson.", Cmd_Fnord_f, 0, 0, 16, 0, 0},
 	{"friends", "Players added to your friends list can send you messages and hear your friend chat.", Cmd_Friends_f, 0, qfalse, 0, 0, 0, 0},
-	{"hilevel","Display top ten players with the highest level.", HiScore, 3, qfalse, 0, 1, 0, 0},
-	{"hikills","Display top ten players with the most kills.", HiScore, 4, qfalse, 0, 1, 0, 0},
-	{"hiscore","Display top ten players with the highest score.", HiScore, 0, qfalse, 0, 1, 0, 0},
-	{"histashes","Display top ten players with the most stashes.", HiScore, 5, qfalse, 0, 1, 0, 0},
-	{"hitime","Display top ten players with most time on the server.", HiScore, 1, qfalse, 0, 1, 0, 0},
+	{"hilevel","Display the top ten players with the highest level.", HiScore, 3, qfalse, 0, 1, 0, 0},
+	{"toplevel","Display the top ten players with the highest level.", HiScore, 3, qfalse, 0, 1, 0, 0},
+	{"hikills","Display the top ten players with the most kills.", HiScore, 4, qfalse, 0, 1, 0, 0},
+	{"topkills","Display the top ten players with the most kills.", HiScore, 4, qfalse, 0, 1, 0, 0},
+	{"hiscore","Display the top ten players with the highest score.", HiScore, 0, qfalse, 0, 1, 0, 0},
+	{"topscore","Display the top ten players with the highest score.", HiScore, 0, qfalse, 0, 1, 0, 0},
+	{"histashes","Display the top ten players with the most stashes.", HiScore, 5, qfalse, 0, 1, 0, 0},
+	{"topstashes","Display the top ten players with the most stashes.", HiScore, 5, qfalse, 0, 1, 0, 0},
+	{"hitime","Display the top ten players with the most time on the server.", HiScore, 1, qfalse, 0, 1, 0, 0},
+	{"toptime","Display the top ten players with the most time on the server.", HiScore, 1, qfalse, 0, 1, 0, 0},
+	{"hikd","Display the top ten players with the highest kill/death ratio.", HiRatio, RATIO_KILL_DEATH, qfalse, 0, 1, 0, 0},
+	{"topkd","Display the top ten players with the highest kill/death ratio.", HiRatio, RATIO_KILL_DEATH, qfalse, 0, 1, 0, 0},
+	{"hiduels","Display the top ten players with the highest duel win/loss ratio.", HiRatio, RATIO_DUEL_WIN_LOSS, qfalse, 0, 1, 0, 0},
+	{"topduels","Display the top ten players with the highest duel win/loss ratio.", HiRatio, RATIO_DUEL_WIN_LOSS, qfalse, 0, 1, 0, 0},
+	{"hihits","Display the top ten players with the highest accuracy (hit/miss ratio).", HiRatio, RATIO_HIT_MISS, qfalse, 0, 1, 0, 0},
+	{"tophits","Display the top ten players with the highest accuracy (hit/miss ratio).", HiRatio, RATIO_HIT_MISS, qfalse, 0, 1, 0, 0},
 	{"ignore", "Ignore messages from the player.  Set player to -1 to ignore/unignore all.", Cmd_IgnoreClient_f, 0, qfalse, 0, 0, 0, 0},
 	{"interact", "Use this to interact with certain terminals.", Cmd_Interact_f, 0, qfalse, 0, 0, 0, 0},
 	{"ionlyduel","You will be (almost) invulnerable until you engage a duel, but you can't use offensive force powers or hurt anyone.", Cmd_Ionlyduel_f, 0, qfalse, 0, 64, ~(1 << GT_FFA), 0},
