@@ -51,7 +51,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,1,0 // Mystic Lugormod version
+ FILEVERSION 1,0,2,0 // Mystic Lugormod version
  PRODUCTVERSION 1,0,1,0 // JKA Version, do not change
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
@@ -70,7 +70,7 @@ BEGIN
             VALUE "Comments", "Raven Software, Lugor, RoboPhred, Ufo, Mystic Forces"
             VALUE "CompanyName", "Activision Inc, RoboPhredDev"
             VALUE "FileDescription", "Mystic Lugormod"
-            VALUE "FileVersion", "1.0.1" // Mystic Lugormod version
+            VALUE "FileVersion", "1.0.2" // Mystic Lugormod version
             VALUE "InternalName", "Mystic Lugormod"
             VALUE "LegalCopyright", "Copyright (C) 2007-2023"
             VALUE "OriginalFilename", "jampgamex86.dll"
