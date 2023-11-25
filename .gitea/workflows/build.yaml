@@ -76,13 +76,13 @@ jobs:
         run: cmake --build . --config ${{ matrix.build_type }} -j $NUMBER_OF_PROCESSORS
 
       - name: 🏗️ Install
-        if: ${{ matrix.build_type == 'Release' }}
+        if: ${{ matrix.build_type == 'Release' }} && gitea.event_name == 'push' && gitea.ref == 'refs/heads/develop'
         working-directory: ${{ gitea.workspace }}/build
         shell: bash
         run: cmake --install . --config ${{ matrix.build_type }}
 
       - name: ⏫ Upload artifacts
-        if: ${{ matrix.build_type == 'Release' }}
+        if: ${{ matrix.build_type == 'Release' }} && gitea.event_name == 'push' && gitea.ref == 'refs/heads/develop'
         uses: actions/upload-artifact@v3
         with:
           name: windows-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}
@@ -149,25 +149,25 @@ jobs:
       - name: 🔨 Build
         working-directory: ${{ gitea.workspace }}/build
         shell: bash
-        run: cmake --build . -j $(nproc)
+        run: cmake --build . -j 64
 
       - name: 🏗️ Install
-        if: ${{ matrix.build_type == 'Release' }}
+        if: ${{ matrix.build_type == 'Release' }} && gitea.ref == 'refs/heads/develop'
         working-directory: ${{ gitea.workspace }}/build
         shell: bash
         run: cmake --install .
 
       - name: ⏫ Upload artifacts
         uses: actions/upload-artifact@v3
-        if: ${{ matrix.build_type == 'Release' }}
+        if: ${{ matrix.build_type == 'Release' }} && gitea.ref == 'refs/heads/develop'
         with:
           name: linux-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}
           path: ${{ gitea.workspace }}/build/install/JediAcademy
           if-no-files-found: error
 
   create-latest:
-    name: Create latest 'develop' build
-    if: gitea.event_name == 'push' && gitea.ref == 'refs/heads/develop'
+    name: Create latest build for 'release'
+    if: gitea.event_name == 'push' && gitea.ref == 'refs/heads/release'
     needs: [msvc, linux]
     runs-on: linux-latest
     steps:
