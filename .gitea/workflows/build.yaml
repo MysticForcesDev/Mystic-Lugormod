@@ -87,7 +87,6 @@ jobs:
         with:
           name: windows-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}
           path: ${{ gitea.workspace }}/build/bin/JediAcademy
-          # path: ${{ gitea.workspace }}/build/bin/JediAcademy/windows-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}.tar.gz
           if-no-files-found: error
 
   linux:
@@ -158,19 +157,12 @@ jobs:
         shell: bash
         run: cmake --install .
 
-      # - name: 🗜️ Create binary archive
-      #   if: ${{ matrix.build_type == 'Release' }}
-      #   working-directory: ${{ gitea.workspace }}/build/install/JediAcademy
-      #   shell: bash
-      #   run: tar -czvf linux-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}.tar.gz *
-
       - name: ⏫ Upload artifacts
         uses: actions/upload-artifact@v3
         if: ${{ matrix.build_type == 'Release' }}
         with:
           name: linux-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}
           path: ${{ gitea.workspace }}/build/install/JediAcademy
-          # path: ${{gitea.workspace}}/build/install/JediAcademy/linux-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}.tar.gz
           if-no-files-found: error
 
   create-latest:
@@ -187,10 +179,12 @@ jobs:
       - name: ⏬ Download Artifacts
         uses: actions/download-artifact@v3
 
+        # Temporarly disable 64-bit zipping
+        #  7z a -r windows-x86_64.zip ./windows-x86_64-Release-Non-Portable/* '-x!msvcp*.*' '-x!vcruntime*.*' '-x!concrt*.*'
       - name: 🗜️ Create binary archives
         run: |
           7z a -r windows-x86.zip ./windows-x86-Release-Non-Portable/* '-x!msvcp*.*' '-x!vcruntime*.*' '-x!concrt*.*'
-          7z a -r windows-x86_64.zip ./windows-x86_64-Release-Non-Portable/* '-x!msvcp*.*' '-x!vcruntime*.*' '-x!concrt*.*'
+ 
           mv ./linux-x86-Release-Non-Portable/* linux-x86.tar.gz
           mv ./linux-x86_64-Release-Non-Portable/* linux-x86_64.tar.gz
 
@@ -218,9 +212,10 @@ jobs:
             artifact_name: windows-x86.zip
             zip: true
 
-          - artifact_dir: windows-x86_64-Release-Non-Portable/JediAcademy
-            artifact_name: windows-x86_64.zip
-            zip: true
+          # Temporarly disabled, no 64-bit varaint yet
+          # - artifact_dir: windows-x86_64-Release-Non-Portable/JediAcademy
+          #   artifact_name: windows-x86_64.zip
+          #   zip: true
 
           - artifact_dir: linux-x86-Release-Non-Portable
             artifact_name: linux-x86.tar.gz
