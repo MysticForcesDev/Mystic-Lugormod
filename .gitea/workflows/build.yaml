@@ -181,12 +181,14 @@ jobs:
 
         # Temporarly disable 64-bit zipping
         #  7z a -r windows-x86_64.zip ./windows-x86_64-Release-Non-Portable/* '-x!msvcp*.*' '-x!vcruntime*.*' '-x!concrt*.*'
+        #  mv ./linux-x86-Release-Non-Portable/* linux-x86.tar.gz
+        #  mv ./linux-x86_64-Release-Non-Portable/* linux-x86_64.tar.gz
       - name: 🗜️ Create binary archives
         run: |
+          echo "Current directory: $(pwd)"
           7z a -r windows-x86.zip ./windows-x86-Release-Non-Portable/* '-x!msvcp*.*' '-x!vcruntime*.*' '-x!concrt*.*'
- 
-          mv ./linux-x86-Release-Non-Portable/* linux-x86.tar.gz
-          mv ./linux-x86_64-Release-Non-Portable/* linux-x86_64.tar.gz
+          tar -czvf linux-x86.tar.gz ./linux-x86-Release-Non-Portable/*
+          tar -czvf linux-x86_64.tar.gz ./linux-x86-Release-Non-Portable/*
 
       - name: 🛠️ Create latest build
         uses: marvinpinto/action-automatic-releases@latest
@@ -218,11 +220,11 @@ jobs:
           #   zip: true
 
           - artifact_dir: linux-x86-Release-Non-Portable
-            artifact_name: linux-x86.tar.gz
+            artifact_name: linux-x86.zip
             zip: false
 
           - artifact_dir: linux-x86_64-Release-Non-Portable
-            artifact_name: linux-x86_64.tar.gz
+            artifact_name: linux-x86_64.zip
             zip: false
 
     steps:
