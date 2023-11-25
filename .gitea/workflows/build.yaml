@@ -1,21 +1,256 @@
-name: Build Linux 64-bit
-run-name: ${{ gitea.actor }} is testing out Gitea Actions 🚀
+name: build
+
 on:
+  workflow_dispatch:
+  push:
+    branches: [develop]
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - "docs/*"
   pull_request:
-    types: [opened, reopened]
+    branches: [develop]
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - "docs/*"
+  release:
+    types: [published]
 
 jobs:
-  Explore-Gitea-Actions:
-    runs-on: ubuntu-latest
+  msvc:
+    name: Windows
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        # arch: [x86, x86_64]
+        arch: [x86]
+        build_type: [Debug, Release]
+        portable: [Portable, Non-Portable]
+        exclude:
+          - build_type: Debug
+            portable: Portable
+        include:
+          - arch: x86
+            platform: Win32
+          # - arch: x86_64
+            # platform: x64
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ gitea.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by Gitea!"
-      - run: echo "🔎 The name of your branch is ${{ gitea.ref }} and your repository is ${{ gitea.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - run: echo "💡 The ${{ gitea.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
+      - name: 🔬 Environment
+        shell: bash
         run: |
-          ls ${{ gitea.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          echo "🎉 The job was automatically triggered by a ${{ gitea.event_name }} event."
+          echo "🔎 The name of your branch is '${{ gitea.ref }}' and your repository is '${{ gitea.repository }}'."
+          echo "👨🏽‍🏭 This job is now running on a ${{ runner.os }} server."
+          echo "📐 Architecture: ${{ matrix.arch }}"
+          echo "🛰️ Workspace Base: ${{ gitea.workspace }}"
+
+      - name: ⏬ Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🧰 Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: 🚧 Create Build Environment
+        shell: bash
+        run: cmake -E make_directory ${{ gitea.workspace }}/build && echo "📁 Created 'build' directory"
+
+      - name: 🔧 Configure CMake
+        shell: bash
+        working-directory: ${{ gitea.workspace }}
+        run: |
+          BUILD_DIR=build
+          OPTIONS="-DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX=$BUILD_DIR/bin"
+          if [ "${{ matrix.portable }}" == "Portable" ]; then
+            OPTIONS+=" -DBuildPortableVersion=ON"
+          else
+            OPTIONS+=" -DBuildPortableVersion=OFF"
+          fi
+          OPTIONS+=" -DBuildJK2SPEngine=OFF -DBuildJK2SPGame=OFF -DBuildJK2SPRdVanilla=OFF"
+          cmake -S . -B build -A ${{ matrix.platform }} $OPTIONS && echo "🔧 Configured CMake (Build Directory: $BUILD_DIR)"
+
+      - name: 🔨 Build
+        working-directory: ${{ gitea.workspace }}/build
+        shell: bash
+        run: cmake --build . --config ${{ matrix.build_type }} -j $NUMBER_OF_PROCESSORS
+
+      - name: 🏗️ Install
+        if: ${{ matrix.build_type == 'Release' }}
+        working-directory: ${{ gitea.workspace }}/build
+        shell: bash
+        run: cmake --install . --config ${{ matrix.build_type }}
+
+      - name: ⏫ Upload artifacts
+        if: ${{ matrix.build_type == 'Release' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}
+          path: ${{ gitea.workspace }}/build/bin/JediAcademy
+          # path: ${{ gitea.workspace }}/build/bin/JediAcademy/windows-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}.tar.gz
+          if-no-files-found: error
+
+  linux:
+    name: Linux
+    runs-on: linux-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x86, x86_64]
+        build_type: [Debug, Release]
+        portable: [Non-Portable]
+
+    steps:
+      - name: 🔬 Environment
+        run: |
+          echo "🎉 The job was automatically triggered by a ${{ gitea.event_name }} event."
+          echo "🔎 The name of your branch is '${{ gitea.ref }}' and your repository is '${{ gitea.repository }}'."
+          echo "👨🏽‍🏭 This job is now running on a ${{ runner.os }} server."
+          echo "📐 Architecture: ${{ matrix.arch }}"
+          echo "🛰️ Workspace Base: ${{ gitea.workspace }}"
+
+      - name: ⏬ Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🧰 Update dependencies
+        run: |
+          if [ ${{ matrix.arch }} == "x86" ]; then
+            sudo dpkg --add-architecture i386
+            sudo apt-get -qq update
+            sudo apt-get -y install aptitude
+            sudo apt-get -y install gcc-multilib g++-multilib ninja-build
+            sudo apt-get -y install --allow-downgrades libpcre2-8-0:i386 libjpeg-dev:i386 libpng-dev:i386 libcurl4-openssl-dev:i386
+            sudo aptitude -y install libglib2.0-dev:i386 libsdl2-dev:i386
+          else
+            sudo apt-get -qq update
+            sudo apt-get -y install libjpeg-dev libpng-dev zlib1g-dev libsdl2-dev
+          fi
+
+      - name: 🚧 Create Build Environment
+        run: |
+          cmake -E make_directory ${{ gitea.workspace }}/build && echo "📁 Created 'build' directory"
+
+      - name: 🔧 Configure CMake
+        shell: bash
+        working-directory: ${{ gitea.workspace }}
+        run: |
+          BUILD_DIR="${{ gitea.workspace }}/build"
+          OPTIONS="-DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_INSTALL_PREFIX=$BUILD_DIR/install"
+          if [ "${{ matrix.portable }}" == "Portable" ]; then
+            OPTIONS+=" -DUseInternalLibs=ON -DBuildPortableVersion=ON"
+          else
+            OPTIONS+=" -DUseInternalLibs=OFF -DBuildPortableVersion=OFF"
+          fi
+          if [ ${{ matrix.arch }} == "x86" ]; then
+            OPTIONS+=" -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchains/linux-i686.cmake"
+          fi
+          OPTIONS+=" -DBuildJK2SPEngine=ON -DBuildJK2SPGame=ON -DBuildJK2SPRdVanilla=ON"
+          cmake -S ${{ gitea.workspace }} -B build $OPTIONS && echo "🔧 Configured CMake (Build Directory: $BUILD_DIR)"
+
+      - name: 🔨 Build
+        working-directory: ${{ gitea.workspace }}/build
+        shell: bash
+        run: cmake --build . -j $(nproc)
+
+      - name: 🏗️ Install
+        if: ${{ matrix.build_type == 'Release' }}
+        working-directory: ${{ gitea.workspace }}/build
+        shell: bash
+        run: cmake --install .
+
+      # - name: 🗜️ Create binary archive
+      #   if: ${{ matrix.build_type == 'Release' }}
+      #   working-directory: ${{ gitea.workspace }}/build/install/JediAcademy
+      #   shell: bash
+      #   run: tar -czvf linux-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}.tar.gz *
+
+      - name: ⏫ Upload artifacts
+        uses: actions/upload-artifact@v3
+        if: ${{ matrix.build_type == 'Release' }}
+        with:
+          name: linux-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}
+          path: ${{ gitea.workspace }}/build/install/JediAcademy
+          # path: ${{gitea.workspace}}/build/install/JediAcademy/linux-${{ matrix.arch }}-${{ matrix.build_type }}-${{ matrix.portable }}.tar.gz
+          if-no-files-found: error
+
+  create-latest:
+    name: Create latest 'develop' build
+    if: gitea.event_name == 'push' && gitea.ref == 'refs/heads/develop'
+    needs: [msvc, linux]
+    runs-on: linux-latest
+    steps:
+      - name: ⏬ Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: ⏬ Download Artifacts
+        uses: actions/download-artifact@v3
+
+      - name: 🗜️ Create binary archives
+        run: |
+          7z a -r windows-x86.zip ./windows-x86-Release-Non-Portable/* '-x!msvcp*.*' '-x!vcruntime*.*' '-x!concrt*.*'
+          7z a -r windows-x86_64.zip ./windows-x86_64-Release-Non-Portable/* '-x!msvcp*.*' '-x!vcruntime*.*' '-x!concrt*.*'
+          mv ./linux-x86-Release-Non-Portable/* linux-x86.tar.gz
+          mv ./linux-x86_64-Release-Non-Portable/* linux-x86_64.tar.gz
+
+      - name: 🛠️ Create latest build
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITEA_TOKEN }}
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: Latest Build
+          files: |
+            *.zip
+            *.tar.gz
+
+  create-release:
+    name: Release
+    if: gitea.event_name == 'release'
+    needs: [msvc, linux]
+    runs-on: linux-latest
+
+    strategy:
+      matrix:
+        include:
+          - artifact_dir: windows-x86-Release-Non-Portable/JediAcademy
+            artifact_name: windows-x86.zip
+            zip: true
+
+          - artifact_dir: windows-x86_64-Release-Non-Portable/JediAcademy
+            artifact_name: windows-x86_64.zip
+            zip: true
+
+          - artifact_dir: linux-x86-Release-Non-Portable
+            artifact_name: linux-x86.tar.gz
+            zip: false
+
+          - artifact_dir: linux-x86_64-Release-Non-Portable
+            artifact_name: linux-x86_64.tar.gz
+            zip: false
+
+    steps:
+      - name: ⏬ Checkout Repository
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: ⏬ Download Artifacts
+        uses: actions/download-artifact@v3
+
+      - name: 🗜️ Create archive
+        run: |
+          if [ "${{ matrix.zip }}" == "true" ]; then
+            7z a -r ${{ matrix.artifact_name }} ./${{ matrix.artifact_dir }}/* '-x!msvcp*.*' '-x!vcruntime*.*' '-x!concrt*.*'
+          else
+            mv ./${{ matrix.artifact_dir }}/* ${{ matrix.artifact_name }}
+          fi
+
+      - name: ⏫ Upload archives
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITEA_TOKEN }}
+          tag: ${{ gitea.ref }}
+          overwrite: true
+          file: ${{ matrix.artifact_name }}
