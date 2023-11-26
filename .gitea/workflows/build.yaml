@@ -34,7 +34,7 @@ jobs:
           - arch: x86
             platform: Win32
           # - arch: x86_64
-            # platform: x64
+          # platform: x64
 
     steps:
       - name: 🔬 Environment
