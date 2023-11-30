@@ -81,7 +81,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define CROUCH_VIEWHEIGHT	(CROUCH_MAXS_2+STANDARD_VIEWHEIGHT_OFFSET)//12
 #define	DEAD_VIEWHEIGHT		-16
 
-#define MAX_CLIENT_SCORE_SEND	20
+#define MAX_CLIENT_SCORE_SEND 20
 
 //
 // config strings are a general means of communicating variable length strings
@@ -133,11 +133,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define	CS_SOUNDS				(CS_SKYBOXORG+1)
 #define CS_ICONS				(CS_SOUNDS+MAX_SOUNDS)
 #define	CS_PLAYERS				(CS_ICONS+MAX_ICONS)
-
-//// Ghoul2 Insert Start
 #define CS_G2BONES				(CS_PLAYERS+MAX_CLIENTS) 	//rww - used to be CS_CHARSKINS, but I have eliminated the need for that.
-//// Ghoul2 Insert End
-
 #define CS_LOCATIONS			(CS_G2BONES+MAX_G2BONES)
 #define CS_PARTICLES			(CS_LOCATIONS+MAX_LOCATIONS)
 #define CS_EFFECTS				(CS_PARTICLES+MAX_LOCATIONS)
@@ -1057,9 +1053,8 @@ typedef enum {
 	TEAM_RED,
 	TEAM_BLUE,
 	TEAM_SPECTATOR,
-	//RoboPhred: this should not be a team
-	//leaving it here for spawnpoint control
-    TEAM_JAILED,
+	
+    TEAM_JAILED, //Lugormod: this should not be a team, leaving it here for spawnpoint control
         
 	TEAM_NUM_TEAMS
 } team_t;

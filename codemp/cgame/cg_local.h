@@ -1023,6 +1023,7 @@ Ghoul2 Insert End
 #if 0
 	int					snapshotTimeoutTime;
 #endif
+
 	qboolean spawning;
 	int	numSpawnVars;
 	char *spawnVars[MAX_SPAWN_VARS][2];	// key / value pairs
