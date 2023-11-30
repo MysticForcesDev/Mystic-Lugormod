@@ -223,11 +223,11 @@ void CG_ParseServerinfo( void ) {
 		int weather = 0;
 
 		cg.mInRMG = qtrue;
-		trap_Cvar_Set("RMG", "1");
+		trap->Cvar_Set("RMG", "1");
 
 		weather = atoi( Info_ValueForKey( info, "RMG_weather" ) );
 
-		trap_Cvar_Set("RMG_weather", va("%i", weather));
+		trap->Cvar_Set("RMG_weather", va("%i", weather));
 
 		if (weather == 1 || weather == 2)
 		{
