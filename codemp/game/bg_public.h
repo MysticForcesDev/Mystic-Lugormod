@@ -37,7 +37,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define	MAX_SPAWN_VARS_CHARS	4096
 
 
-#define	GAME_VERSION	"basejka-1"
+#define	GAME_VERSION		"basejka-1"
 
 #define DEFAULT_SABER			"Kyle"
 #define DEFAULT_SABER_STAFF		"dual_1"
@@ -74,7 +74,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_MINS_2		-24
 #define DEFAULT_MAXS_2		40
 #define CROUCH_MAXS_2		16
-#define	STANDARD_VIEWHEIGHT_OFFSET 	-4
+#define	STANDARD_VIEWHEIGHT_OFFSET -4
 
 #define	MINS_Z				-24
 #define	DEFAULT_VIEWHEIGHT	(DEFAULT_MAXS_2+STANDARD_VIEWHEIGHT_OFFSET)//26
@@ -89,38 +89,38 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
 // CS_SERVERINFO and CS_SYSTEMINFO are defined in q_shared.h
-#define	CS_MUSIC					2
-#define	CS_MESSAGE					3		// from the map worldspawn's message field
-#define	CS_MOTD						4		// g_motd string for server message of the day
-#define	CS_WARMUP					5		// server time when the match will be restarted
-#define	CS_SCORES1					6
-#define	CS_SCORES2					7
-#define CS_VOTE_TIME				8
-#define CS_VOTE_STRING				9
-#define	CS_VOTE_YES					10
-#define	CS_VOTE_NO					11
+#define	CS_MUSIC				2
+#define	CS_MESSAGE				3		// from the map worldspawn's message field
+#define	CS_MOTD					4		// g_motd string for server message of the day
+#define	CS_WARMUP				5		// server time when the match will be restarted
+#define	CS_SCORES1				6
+#define	CS_SCORES2				7
+#define CS_VOTE_TIME			8
+#define CS_VOTE_STRING			9
+#define	CS_VOTE_YES				10
+#define	CS_VOTE_NO				11
 
-#define CS_TEAMVOTE_TIME			12
-#define CS_TEAMVOTE_STRING			14
-#define	CS_TEAMVOTE_YES				16
-#define	CS_TEAMVOTE_NO				18
+#define CS_TEAMVOTE_TIME		12
+#define CS_TEAMVOTE_STRING		14
+#define	CS_TEAMVOTE_YES			16
+#define	CS_TEAMVOTE_NO			18
 
-#define	CS_GAME_VERSION				20
-#define	CS_LEVEL_START_TIME			21		// so the timer only shows the current level
-#define	CS_INTERMISSION				22		// when 1, fraglimit/timelimit has been hit and intermission will start in a second or two
-#define CS_FLAGSTATUS				23		// string indicating flag status in CTF
-#define CS_SHADERSTATE				24
-#define CS_BOTINFO					25
+#define	CS_GAME_VERSION			20
+#define	CS_LEVEL_START_TIME		21		// so the timer only shows the current level
+#define	CS_INTERMISSION			22		// when 1, fraglimit/timelimit has been hit and intermission will start in a second or two
+#define CS_FLAGSTATUS			23		// string indicating flag status in CTF
+#define CS_SHADERSTATE			24
+#define CS_BOTINFO				25
 
-#define	CS_ITEMS					27		// string of 0's and 1's that tell which items are present
+#define	CS_ITEMS				27		// string of 0's and 1's that tell which items are present
 
-#define CS_CLIENT_JEDIMASTER		28		// current jedi master
-#define CS_CLIENT_DUELWINNER		29		// current duel round winner - needed for printing at top of scoreboard
-#define CS_CLIENT_DUELISTS			30		// client numbers for both current duelists. Needed for a number of client-side things.
-#define CS_CLIENT_DUELHEALTHS		31		// nmckenzie: DUEL_HEALTH.  Hopefully adding this cs is safe and good?
-#define CS_GLOBAL_AMBIENT_SET		32
+#define CS_CLIENT_JEDIMASTER	28		// current jedi master
+#define CS_CLIENT_DUELWINNER	29		// current duel round winner - needed for printing at top of scoreboard
+#define CS_CLIENT_DUELISTS		30		// client numbers for both current duelists. Needed for a number of client-side things.
+#define CS_CLIENT_DUELHEALTHS	31		// nmckenzie: DUEL_HEALTH.  Hopefully adding this cs is safe and good?
+#define CS_GLOBAL_AMBIENT_SET	32
 
-#define CS_AMBIENT_SET				37
+#define CS_AMBIENT_SET			37
 
 #define CS_SIEGE_STATE			(CS_AMBIENT_SET+MAX_AMBIENT_SETS)
 #define CS_SIEGE_OBJECTIVES		(CS_SIEGE_STATE+1)
@@ -165,9 +165,9 @@ typedef enum {
 
 #define G2_MODEL_PART	50
 
-#define BG_NUM_TOGGLEABLE_SURFACES	31
+#define BG_NUM_TOGGLEABLE_SURFACES 31
 
-#define MAX_CUSTOM_SIEGE_SOUNDS	30
+#define MAX_CUSTOM_SIEGE_SOUNDS 30
 
 extern const char *bg_customSiegeSoundNames[MAX_CUSTOM_SIEGE_SOUNDS];
 
@@ -226,19 +226,19 @@ typedef enum {
 } gametype_t;
 
 // gametype bits
-#define GTB_NONE					0x000 // invalid
-#define GTB_FFA						0x001 // free for all
-#define GTB_HOLOCRON				0x002 // holocron ffa
-#define GTB_JEDIMASTER				0x004 // jedi master
-#define GTB_DUEL					0x008 // one on one tournament
-#define GTB_POWERDUEL				0x010 // two on one tournament
-#define GTB_SINGLE_PLAYER			0x020 // single player ffa
-#define GTB_NOTTEAM					0x03F // **SPECIAL: All of the above gametypes, i.e. not team-based
-#define GTB_TEAM					0x040 // team deathmatch
-#define GTB_SIEGE					0x080 // siege
-#define GTB_CTF						0x100 // capture the flag
-#define GTB_CTY						0x200 // capture the ysalimiri
-#define GTB_ALL						0x1FF // all
+#define GTB_NONE			0x000 // invalid
+#define GTB_FFA				0x001 // free for all
+#define GTB_HOLOCRON		0x002 // holocron ffa
+#define GTB_JEDIMASTER		0x004 // jedi master
+#define GTB_DUEL			0x008 // one on one tournament
+#define GTB_POWERDUEL		0x010 // two on one tournament
+#define GTB_SINGLE_PLAYER	0x020 // single player ffa
+#define GTB_NOTTEAM			0x03F // **SPECIAL: All of the above gametypes, i.e. not team-based
+#define GTB_TEAM			0x040 // team deathmatch
+#define GTB_SIEGE			0x080 // siege
+#define GTB_CTF				0x100 // capture the flag
+#define GTB_CTY				0x200 // capture the ysalimiri
+#define GTB_ALL				0x1FF // all
 
 typedef enum _flag_status {
 	FLAG_ATBASE = 0,
@@ -571,12 +571,12 @@ typedef enum {
 	STAT_ARMOR,
 	STAT_DEAD_YAW,					// look this direction when dead (FIXME: get rid of?)
 	STAT_CLIENTS_READY,				// bit mask of clients wishing to exit the intermission (FIXME: configstring?)
-	STAT_MAX_HEALTH,					// health / armor limit, changable by handicap
-	STAT_PROFESSION,      //Lugormod profession
-	STAT_LEVEL,           //Lugormod Level
-	STAT_EXTRA_FORCE_BITS, //Lugormod extra bits for >3 force levels
-	STAT_EXTRA_FORCE_BITS2  //Lugormod extra bits for >3 force levels
-	//STAT_PERS_FLAGS, //Lugormod persistant flags
+	STAT_MAX_HEALTH,				// health / armor limit, changable by handicap
+	STAT_PROFESSION,				//Lugormod profession
+	STAT_LEVEL,						//Lugormod Level
+	STAT_EXTRA_FORCE_BITS,			//Lugormod extra bits for >3 force levels
+	STAT_EXTRA_FORCE_BITS2			//Lugormod extra bits for >3 force levels
+	//STAT_PERS_FLAGS,				//Lugormod persistant flags
 } statIndex_t;
 
 
@@ -656,9 +656,8 @@ typedef enum {
 
 #define EF_JETPACK				(1<<29)		//rww - wearing a jetpack
 #define EF_JETPACK_FLAMING		(1<<30)		//rww - jetpack fire effect
-#define EF_GRAPPLING			(1<<31) 	//Lugormod
-#define EF_PROFESSION			(1<<32) 	//Lugormod
-//#define	EF_NOT_USED_5			(1<<31)		// not used
+#define EF_GRAPPLING			(1<<31) 	// Lugormod
+#define EF_PROFESSION			(1<<32) 	// Lugormod
 
 //These new EF2_??? flags were added for NPCs, they really should not be used often.
 //NOTE: we only allow 10 of these!
@@ -670,8 +669,8 @@ typedef enum {
 #define	EF2_HYPERSPACE			(1<<5)		// Used to both start the hyperspace effect on the predicted client and to let the vehicle know it can now jump into hyperspace (after turning to face the proper angle)
 #define	EF2_BRACKET_ENTITY		(1<<6)		// Draw as bracketed
 #define	EF2_SHIP_DEATH			(1<<7)		// "died in ship" mode
-#define	EF2_CANSEE				(1<<8)		// can be seen with force see 3
-#define EF2_XFORCEBITS			(1<<9)		//This one isn't sent
+#define	EF2_CANSEE				(1<<8)		// Can be seen with force see 3
+#define EF2_XFORCEBITS			(1<<9)		// This one isn't sent
 
 typedef enum {
 	EFFECT_NONE = 0,
@@ -1521,19 +1520,19 @@ typedef struct saberTrail_s {
 } saberTrail_t;
 
 typedef struct bladeInfo_s {
-	qboolean				active;
+	qboolean		active;
 	saber_colors_t	color;
-	float						radius;
-	float						length, lengthMax, lengthOld;
-	float						desiredLength;
-	vec3_t					muzzlePoint, muzzlePointOld;
-	vec3_t					muzzleDir, muzzleDirOld;
-	saberTrail_t		trail;
-	int							hitWallDebounceTime;
-	int							storageTime;
-	int							extendDebounce;
-	float   				unscaledRadius; //Lugormod
-	float         	unscaledLengthMax; //Lugoromd
+	float			radius;
+	float			length, lengthMax, lengthOld;
+	float			desiredLength;
+	vec3_t			muzzlePoint, muzzlePointOld;
+	vec3_t			muzzleDir, muzzleDirOld;
+	saberTrail_t	trail;
+	int				hitWallDebounceTime;
+	int				storageTime;
+	int				extendDebounce;
+	float   		unscaledRadius;		//Lugormod
+	float         	unscaledLengthMax;	//Lugoromd
 } bladeInfo_t;
 #define MAX_BLADES 8
 
