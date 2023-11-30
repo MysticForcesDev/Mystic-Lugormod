@@ -6058,6 +6058,14 @@ void CG_AddSaberBlade( centity_t *cent, centity_t *scent, refEntity_t *saber, in
 		client = &cgs.clientinfo[cent->currentState.number];
 	}
 
+	//scale saber size with player size
+	if (cent->currentState.iModelScale) {
+		float scale = 1.0f;
+		scale = (float)cent->currentState.iModelScale / 100;
+		client->saber[saberNum].blade[bladeNum].lengthMax = client->saber[saberNum].blade[bladeNum].unscaledLengthMax * scale;
+		client->saber[saberNum].blade[bladeNum].radius = client->saber[saberNum].blade[bladeNum].unscaledRadius * scale;
+	}
+
 	saberEnt = &cg_entities[cent->currentState.saberEntityNum];
 	saberLen = client->saber[saberNum].blade[bladeNum].length;
 
@@ -10153,14 +10161,14 @@ stillDoSaber:
 
 								if (tagBolt == -1)
 								{
-									assert(0);
+									//assert(0);
 								}
 								break;
 							}
 
 							if (tagBolt == -1)
 							{
-								assert(0);
+								//assert(0);
 								break;
 							}
 						}
@@ -10554,9 +10562,19 @@ stillDoSaber:
 
 	if ((cg.snap->ps.fd.forcePowersActive & (1 << FP_SEE)) && cg.snap->ps.clientNum != cent->currentState.number)
 	{
-		legs.shaderRGBA[0] = 255;
-		legs.shaderRGBA[1] = 255;
-		legs.shaderRGBA[2] = 0;
+
+		if (cent->currentState.eFlags2&EF2_CANSEE)
+		{
+			// show stashes in green color
+			legs.shaderRGBA[0] = 100;
+			legs.shaderRGBA[1] = 255;
+			legs.shaderRGBA[2] = 100;
+			legs.customShader = cgs.media.forceSightBubble;
+		} else {
+			legs.shaderRGBA[0] = 255;
+			legs.shaderRGBA[1] = 255;
+			legs.shaderRGBA[2] = 0;
+		}
 		legs.renderfx |= RF_MINLIGHT;
 	}
 
@@ -11033,9 +11051,17 @@ stillDoSaber:
 		}
 		else
 		{	// Not a team game
-			legs.shaderRGBA[0] = 255;
-			legs.shaderRGBA[1] = 255;
-			legs.shaderRGBA[2] = 0;
+			if (cent->currentState.eFlags2&EF2_CANSEE)
+			{ // show stashes
+				legs.shaderRGBA[0] = 100;
+				legs.shaderRGBA[1] = 255;
+				legs.shaderRGBA[2] = 100;
+				legs.customShader = cgs.media.forceSightBubble;
+			} else {
+				legs.shaderRGBA[0] = 255;
+				legs.shaderRGBA[1] = 255;
+				legs.shaderRGBA[2] = 0;
+			}
 		}
 
 /*		if (cg.snap->ps.fd.forcePowerLevel[FP_SEE] <= FORCE_LEVEL_1)

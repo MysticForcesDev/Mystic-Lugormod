@@ -211,6 +211,33 @@ void CG_ParseServerinfo( void ) {
 
 	Q_strncpyz( cgs.voteString, CG_ConfigString( CS_VOTE_STRING ), sizeof( cgs.voteString ) );
 
+
+	const char	*tinfo;
+	tinfo = CG_ConfigString( CS_TERRAINS + 1 );
+	if ( !tinfo || !*tinfo )
+	{
+		cg.mInRMG = qfalse;
+	}
+	else
+	{
+		int weather = 0;
+
+		cg.mInRMG = qtrue;
+		trap_Cvar_Set("RMG", "1");
+
+		weather = atoi( Info_ValueForKey( info, "RMG_weather" ) );
+
+		trap_Cvar_Set("RMG_weather", va("%i", weather));
+
+		if (weather == 1 || weather == 2)
+		{
+			cg.mRMGWeather = qtrue;
+		}
+		else
+		{
+			cg.mRMGWeather = qfalse;
+		}
+	}
 	// synchronise our expected snaps/sec with the server's framerate
 	i = atoi( Info_ValueForKey( info, "sv_fps" ) );
 	if ( i )

@@ -788,6 +788,8 @@ typedef struct cg_s {
 
 	qboolean	mapRestart;			// set on a map restart to set back the weapon
 
+	qboolean	mInRMG; 				//rwwRMG - added
+	qboolean	mRMGWeather; 			//rwwRMG - added
 	qboolean	renderingThirdPerson;		// during deaths, chasecams, etc
 
 	// prediction state
@@ -1021,7 +1023,6 @@ Ghoul2 Insert End
 #if 0
 	int					snapshotTimeoutTime;
 #endif
-
 	qboolean spawning;
 	int	numSpawnVars;
 	char *spawnVars[MAX_SPAWN_VARS][2];	// key / value pairs

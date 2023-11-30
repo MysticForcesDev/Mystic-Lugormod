@@ -30,6 +30,7 @@ Ghoul2 Insert Start
 */
 #include "qcommon/q_shared.h"
 #include "ghoul2/G2.h"
+// #include "bg_public.h"
 /*
 Ghoul2 Insert end
 */
@@ -1465,7 +1466,56 @@ Ghoul2 Insert End
 	{
 		VectorClear(cent->modelScale);
 	}
+	//Lugormod stash glow, not sure where to add this
+	if (cg.snap->ps.stats[STAT_PROFESSION] && ((cg.snap->ps.fd.forcePowersActive & (1 << FP_SEE)
+		&& cg.snap->ps.fd.forcePowerLevel[FP_SEE] >= FORCE_LEVEL_2) || cg.snap->ps.zoomMode == 2)
+		&&  cent->currentState.eFlags2&EF2_CANSEE && !(cent->currentState.eFlags & EF_NODRAW))
+	{ //Make the stash glow
+		vec3_t org;
+		float wv;
+		int i;
+		addspriteArgStruct_t fxSArgs;
+		//refEntity_t sRef;
+		//memcpy( &sRef, &ent, sizeof( sRef ) );
 
+		ent.customShader = cgs.media.solidWhite;
+		ent.renderfx = RF_RGB_TINT;
+		wv = sin( cg.time * 0.003f ) * 0.08f + 0.1f;
+		ent.shaderRGBA[0] = wv * 100;
+		ent.shaderRGBA[1] = wv * 255;
+		ent.shaderRGBA[2] = wv * 100;
+		trap->R_AddRefEntityToScene (&ent);
+
+		for ( i = -4; i < 10; i += 1 )
+		{
+			VectorMA( ent.origin, -i, ent.axis[2], org );
+
+			VectorCopy(org, fxSArgs.origin);
+			VectorClear(fxSArgs.vel);
+			VectorClear(fxSArgs.accel);
+			fxSArgs.scale = 5.5f;
+			fxSArgs.dscale = 5.5f;
+			fxSArgs.sAlpha = wv;
+			fxSArgs.eAlpha = wv;
+			fxSArgs.rotation = 0.0f;
+			fxSArgs.bounce = 0.0f;
+			fxSArgs.life = 1.0f;
+			fxSArgs.shader = cgs.media.yellowDroppedSaberShader;
+			fxSArgs.flags = 0x08000000;
+
+			//trap_FX_AddSprite( org, NULL, NULL, 5.5f, 5.5f, wv, wv, 0.0f, 0.0f, 1.0f, cgs.media.yellowSaberGlowShader, 0x08000000 );
+			trap->FX_AddSprite(&fxSArgs);
+		}
+		ent.shaderRGBA[0] = 100;
+		ent.shaderRGBA[1] = 255;
+		ent.shaderRGBA[2] = 100;
+
+		ent.renderfx |= RF_MINLIGHT | RF_NODEPTH;//RF_DEPTHHACK;
+		ent.customShader = cgs.media.forceSightBubble;
+		
+		trap->R_AddRefEntityToScene( &ent );
+	}
+	//stash glow---------------------------------------------------------------
 	if ( cent->currentState.time > cg.time && cent->currentState.weapon == WP_EMPLACED_GUN )
 	{
 		// make the gun pulse red to warn about it exploding
@@ -2210,8 +2260,25 @@ Ghoul2 Insert End
 	{
 		ent.renderfx |= RF_MINLIGHT;
 	}
+	
+	//Lugormod force see items
+	if (cg.snap->ps.stats[STAT_PROFESSION]
+		&& ((cg.snap->ps.fd.forcePowersActive&(1 << FP_SEE)) || cg.snap->ps.zoomMode == 2)
+		&& !(cent->currentState.eFlags&EF_NODRAW))
+	{ //Make the item glow
 
-	if (item->giType != IT_TEAM && msec >= 0 && msec < ITEM_SCALEUP_TIME && !(es->eFlags & EF_ITEMPLACEHOLDER) && !(es->eFlags & EF_DROPPEDWEAPON))
+		ent.shaderRGBA[0] = 255;
+		ent.shaderRGBA[1] = 100;
+		ent.shaderRGBA[2] = 255;
+
+		ent.renderfx |= RF_MINLIGHT | RF_NODEPTH;//RF_DEPTHHACK;
+		ent.customShader = cgs.media.forceSightBubble;
+		
+		trap->R_AddRefEntityToScene( &ent );
+	}
+	//force see items---------------------------------------------------------------
+
+	if (item->giType != IT_TEAM && msec >= 0 && msec < ITEM_SCALEUP_TIME && !(es->eFlags & EF_ITEMPLACEHOLDER) && !(es->eFlags & EF_DROPPEDWEAPON)) 
 	{	// if just respawned, fade in, but don't do this for flags.
 		float alpha;
 		int a;
@@ -3203,6 +3270,37 @@ void CG_CalcEntityLerpPositions( centity_t *cent ) {
 	}
 }
 
+/*
+===============
+CG_TeamBase
+===============
+*/
+static void CG_TeamBase( centity_t *cent ) {
+	refEntity_t model;
+	if ( cgs.gametype == GT_CTF || cgs.gametype == GT_CTY ) {
+		// show the flag base
+		memset(&model, 0, sizeof(model));
+		model.reType = RT_MODEL;
+		VectorCopy( cent->lerpOrigin, model.lightingOrigin );
+		VectorCopy( cent->lerpOrigin, model.origin );
+		AnglesToAxis( cent->currentState.angles, model.axis );
+		if ( cent->currentState.modelindex == TEAM_RED ) {
+			model.hModel = cgs.media.redFlagBaseModel;
+		}
+		else if ( cent->currentState.modelindex == TEAM_BLUE ) {
+			model.hModel = cgs.media.blueFlagBaseModel;
+		}
+		else {
+			model.hModel = cgs.media.neutralFlagBaseModel;
+		}
+
+		if (cent->currentState.eType != ET_NPC)
+		{ //do not do this for g2animents
+			trap->R_AddRefEntityToScene( &model );
+		}
+	}
+}
+
 void CG_G2Animated( centity_t *cent );
 
 static void CG_FX( centity_t *cent )
@@ -3382,6 +3480,7 @@ Ghoul2 Insert End
 		CG_G2Animated( cent );
 		break;
 	case ET_TEAM:
+		CG_TeamBase( cent );
 		break;
 	case ET_BODY:
 		CG_General( cent );

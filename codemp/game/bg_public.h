@@ -33,55 +33,55 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "bg_vehicles.h"
 
 //these two defs are shared now because we do clientside ent parsing
-#define	MAX_SPAWN_VARS			64
+#define	MAX_SPAWN_VARS				64
 #define	MAX_SPAWN_VARS_CHARS	4096
 
 
-#define	GAME_VERSION		"basejka-1"
+#define	GAME_VERSION					"basejka-1"
 
-#define DEFAULT_SABER			"Kyle"
+#define DEFAULT_SABER					"Kyle"
 #define DEFAULT_SABER_STAFF		"dual_1"
 #define DEFAULT_SABER_MODEL		"models/weapons2/saber/saber_w.glm"
-#define	DEFAULT_MODEL			"kyle"
+#define	DEFAULT_MODEL					"kyle"
 #define DEFAULT_MODEL_FEMALE	"jan"
 
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define	STEPSIZE		18
+#define	STEPSIZE										18
 
 #define DEFAULT_FORCEPOWERS	"5-1-000000000000000000"
 #define DEFAULT_FORCEPOWERS_LEN (22) // numPowers + rank + side + separators
 //"rank-side-heal.lev.speed.push.pull.tele.grip.lightning.rage.protect.absorb.teamheal.teamforce.drain.see"
 
-#define	DEFAULT_GRAVITY		800
-#define	GIB_HEALTH			-40
-#define ARMOR_PROTECTION		0.50 // Shields only stop 50% of armor-piercing dmg
-#define ARMOR_REDUCTION_FACTOR	0.50 // Certain damage doesn't take off armor as efficiently
+#define	DEFAULT_GRAVITY							800
+#define	GIB_HEALTH						 			-40
+#define ARMOR_PROTECTION						0.50 // Shields only stop 50% of armor-piercing dmg
+#define ARMOR_REDUCTION_FACTOR			0.50 // Certain damage doesn't take off armor as efficiently
 
-#define	JUMP_VELOCITY		225//270
+#define	JUMP_VELOCITY								225//270
 
-#define	MAX_ITEMS			256
+#define	MAX_ITEMS										256
 
-#define	RANK_TIED_FLAG		0x4000
+#define	RANK_TIED_FLAG							0x4000
 
-#define	ITEM_RADIUS			15		// item sizes are needed for client side pickup detection
+#define	ITEM_RADIUS									15		// item sizes are needed for client side pickup detection
 
-#define	SCORE_NOT_PRESENT	-9999	// for the CS_SCORES[12] when only one player is present
+#define	SCORE_NOT_PRESENT						-9999	// for the CS_SCORES[12] when only one player is present
 
-#define	VOTE_TIME			30000	// 30 seconds before vote times out
+#define	VOTE_TIME										30000	// 30 seconds before vote times out
 
-#define DEFAULT_MINS_2		-24
-#define DEFAULT_MAXS_2		40
-#define CROUCH_MAXS_2		16
-#define	STANDARD_VIEWHEIGHT_OFFSET -4
+#define DEFAULT_MINS_2							-24
+#define DEFAULT_MAXS_2							40
+#define CROUCH_MAXS_2								16
+#define	STANDARD_VIEWHEIGHT_OFFSET 	-4
 
-#define	MINS_Z				-24
-#define	DEFAULT_VIEWHEIGHT	(DEFAULT_MAXS_2+STANDARD_VIEWHEIGHT_OFFSET)//26
-#define CROUCH_VIEWHEIGHT	(CROUCH_MAXS_2+STANDARD_VIEWHEIGHT_OFFSET)//12
-#define	DEAD_VIEWHEIGHT		-16
+#define	MINS_Z										-24
+#define	DEFAULT_VIEWHEIGHT				(DEFAULT_MAXS_2+STANDARD_VIEWHEIGHT_OFFSET)//26
+#define CROUCH_VIEWHEIGHT					(CROUCH_MAXS_2+STANDARD_VIEWHEIGHT_OFFSET)//12
+#define	DEAD_VIEWHEIGHT						-16
 
-#define MAX_CLIENT_SCORE_SEND 20
+#define MAX_CLIENT_SCORE_SEND			20
 
 //
 // config strings are a general means of communicating variable length strings
@@ -89,68 +89,65 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 //
 
 // CS_SERVERINFO and CS_SYSTEMINFO are defined in q_shared.h
-#define	CS_MUSIC				2
-#define	CS_MESSAGE				3		// from the map worldspawn's message field
-#define	CS_MOTD					4		// g_motd string for server message of the day
-#define	CS_WARMUP				5		// server time when the match will be restarted
-#define	CS_SCORES1				6
-#define	CS_SCORES2				7
-#define CS_VOTE_TIME			8
-#define CS_VOTE_STRING			9
-#define	CS_VOTE_YES				10
-#define	CS_VOTE_NO				11
+#define	CS_MUSIC									2
+#define	CS_MESSAGE								3		// from the map worldspawn's message field
+#define	CS_MOTD										4		// g_motd string for server message of the day
+#define	CS_WARMUP									5		// server time when the match will be restarted
+#define	CS_SCORES1								6
+#define	CS_SCORES2								7
+#define CS_VOTE_TIME							8
+#define CS_VOTE_STRING						9
+#define	CS_VOTE_YES								10
+#define	CS_VOTE_NO								11
 
-#define CS_TEAMVOTE_TIME		12
-#define CS_TEAMVOTE_STRING		14
-#define	CS_TEAMVOTE_YES			16
-#define	CS_TEAMVOTE_NO			18
+#define CS_TEAMVOTE_TIME					12
+#define CS_TEAMVOTE_STRING				14
+#define	CS_TEAMVOTE_YES						16
+#define	CS_TEAMVOTE_NO						18
 
-#define	CS_GAME_VERSION			20
-#define	CS_LEVEL_START_TIME		21		// so the timer only shows the current level
-#define	CS_INTERMISSION			22		// when 1, fraglimit/timelimit has been hit and intermission will start in a second or two
-#define CS_FLAGSTATUS			23		// string indicating flag status in CTF
-#define CS_SHADERSTATE			24
-#define CS_BOTINFO				25
+#define	CS_GAME_VERSION						20
+#define	CS_LEVEL_START_TIME				21		// so the timer only shows the current level
+#define	CS_INTERMISSION						22		// when 1, fraglimit/timelimit has been hit and intermission will start in a second or two
+#define CS_FLAGSTATUS							23		// string indicating flag status in CTF
+#define CS_SHADERSTATE						24
+#define CS_BOTINFO								25
 
-#define	CS_ITEMS				27		// string of 0's and 1's that tell which items are present
+#define	CS_ITEMS									27		// string of 0's and 1's that tell which items are present
 
-#define CS_CLIENT_JEDIMASTER	28		// current jedi master
-#define CS_CLIENT_DUELWINNER	29		// current duel round winner - needed for printing at top of scoreboard
-#define CS_CLIENT_DUELISTS		30		// client numbers for both current duelists. Needed for a number of client-side things.
-#define CS_CLIENT_DUELHEALTHS	31		// nmckenzie: DUEL_HEALTH.  Hopefully adding this cs is safe and good?
-#define CS_GLOBAL_AMBIENT_SET	32
+#define CS_CLIENT_JEDIMASTER			28		// current jedi master
+#define CS_CLIENT_DUELWINNER			29		// current duel round winner - needed for printing at top of scoreboard
+#define CS_CLIENT_DUELISTS				30		// client numbers for both current duelists. Needed for a number of client-side things.
+#define CS_CLIENT_DUELHEALTHS			31		// nmckenzie: DUEL_HEALTH.  Hopefully adding this cs is safe and good?
+#define CS_GLOBAL_AMBIENT_SET			32
 
-#define CS_AMBIENT_SET			37
+#define CS_AMBIENT_SET						37
 
-#define CS_SIEGE_STATE			(CS_AMBIENT_SET+MAX_AMBIENT_SETS)
-#define CS_SIEGE_OBJECTIVES		(CS_SIEGE_STATE+1)
-#define CS_SIEGE_TIMEOVERRIDE	(CS_SIEGE_OBJECTIVES+1)
-#define CS_SIEGE_WINTEAM		(CS_SIEGE_TIMEOVERRIDE+1)
-#define CS_SIEGE_ICONS			(CS_SIEGE_WINTEAM+1)
+#define CS_SIEGE_STATE						(CS_AMBIENT_SET+MAX_AMBIENT_SETS)
+#define CS_SIEGE_OBJECTIVES				(CS_SIEGE_STATE+1)
+#define CS_SIEGE_TIMEOVERRIDE			(CS_SIEGE_OBJECTIVES+1)
+#define CS_SIEGE_WINTEAM					(CS_SIEGE_TIMEOVERRIDE+1)
+#define CS_SIEGE_ICONS						(CS_SIEGE_WINTEAM+1)
 
-#define	CS_MODELS				(CS_SIEGE_ICONS+1)
-#define	CS_SKYBOXORG			(CS_MODELS+MAX_MODELS)		//rww - skybox info
-#define	CS_SOUNDS				(CS_SKYBOXORG+1)
-#define CS_ICONS				(CS_SOUNDS+MAX_SOUNDS)
-#define	CS_PLAYERS				(CS_ICONS+MAX_ICONS)
-/*
-Ghoul2 Insert Start
-*/
-#define CS_G2BONES				(CS_PLAYERS+MAX_CLIENTS)
-//rww - used to be CS_CHARSKINS, but I have eliminated the need for that.
-/*
-Ghoul2 Insert End
-*/
-#define CS_LOCATIONS			(CS_G2BONES+MAX_G2BONES)
-#define CS_PARTICLES			(CS_LOCATIONS+MAX_LOCATIONS)
-#define CS_EFFECTS				(CS_PARTICLES+MAX_LOCATIONS)
-#define	CS_LIGHT_STYLES			(CS_EFFECTS + MAX_FX)
+#define	CS_MODELS									(CS_SIEGE_ICONS+1)
+#define	CS_SKYBOXORG							(CS_MODELS+MAX_MODELS)		//rww - skybox info
+#define	CS_SOUNDS									(CS_SKYBOXORG+1)
+#define CS_ICONS									(CS_SOUNDS+MAX_SOUNDS)
+#define	CS_PLAYERS								(CS_ICONS+MAX_ICONS)
+
+//// Ghoul2 Insert Start
+#define CS_G2BONES								(CS_PLAYERS+MAX_CLIENTS) 	//rww - used to be CS_CHARSKINS, but I have eliminated the need for that.
+//// Ghoul2 Insert End
+
+#define CS_LOCATIONS							(CS_G2BONES+MAX_G2BONES)
+#define CS_PARTICLES							(CS_LOCATIONS+MAX_LOCATIONS)
+#define CS_EFFECTS								(CS_PARTICLES+MAX_LOCATIONS)
+#define	CS_LIGHT_STYLES						(CS_EFFECTS + MAX_FX)
 
 //rwwRMG - added:
-#define CS_TERRAINS				(CS_LIGHT_STYLES + (MAX_LIGHT_STYLES*3))
-#define CS_BSP_MODELS			(CS_TERRAINS + MAX_TERRAINS)
+#define CS_TERRAINS								(CS_LIGHT_STYLES + (MAX_LIGHT_STYLES*3))
+#define CS_BSP_MODELS							(CS_TERRAINS + MAX_TERRAINS)
 
-#define CS_MAX					(CS_BSP_MODELS + MAX_SUB_BSP)
+#define CS_MAX										(CS_BSP_MODELS + MAX_SUB_BSP)
 
 #if (CS_MAX) > MAX_CONFIGSTRINGS
 #error overflow: (CS_MAX) > MAX_CONFIGSTRINGS
@@ -166,11 +163,11 @@ typedef enum {
 	G2_MODELPART_RLEG
 } g2ModelParts_t;
 
-#define G2_MODEL_PART	50
+#define G2_MODEL_PART								50
 
-#define BG_NUM_TOGGLEABLE_SURFACES 31
+#define BG_NUM_TOGGLEABLE_SURFACES 	31
 
-#define MAX_CUSTOM_SIEGE_SOUNDS 30
+#define MAX_CUSTOM_SIEGE_SOUNDS 		30
 
 extern const char *bg_customSiegeSoundNames[MAX_CUSTOM_SIEGE_SOUNDS];
 
@@ -574,7 +571,12 @@ typedef enum {
 	STAT_ARMOR,
 	STAT_DEAD_YAW,					// look this direction when dead (FIXME: get rid of?)
 	STAT_CLIENTS_READY,				// bit mask of clients wishing to exit the intermission (FIXME: configstring?)
-	STAT_MAX_HEALTH					// health / armor limit, changable by handicap
+	STAT_MAX_HEALTH,					// health / armor limit, changable by handicap
+	STAT_PROFESSION,      //Lugormod profession
+	STAT_LEVEL,           //Lugormod Level
+	STAT_EXTRA_FORCE_BITS, //Lugormod extra bits for >3 force levels
+	STAT_EXTRA_FORCE_BITS2  //Lugormod extra bits for >3 force levels
+	//STAT_PERS_FLAGS, //Lugormod persistant flags
 } statIndex_t;
 
 
@@ -654,8 +656,9 @@ typedef enum {
 
 #define EF_JETPACK				(1<<29)		//rww - wearing a jetpack
 #define EF_JETPACK_FLAMING		(1<<30)		//rww - jetpack fire effect
-
-#define	EF_NOT_USED_5			(1<<31)		// not used
+#define         EF_GRAPPLING             (1<<31) //Lugormod
+#define         EF_PROFESSION            (1<<32) //Lugormod
+//#define	EF_NOT_USED_5			(1<<31)		// not used
 
 //These new EF2_??? flags were added for NPCs, they really should not be used often.
 //NOTE: we only allow 10 of these!
@@ -667,8 +670,8 @@ typedef enum {
 #define	EF2_HYPERSPACE			(1<<5)		// Used to both start the hyperspace effect on the predicted client and to let the vehicle know it can now jump into hyperspace (after turning to face the proper angle)
 #define	EF2_BRACKET_ENTITY		(1<<6)		// Draw as bracketed
 #define	EF2_SHIP_DEATH			(1<<7)		// "died in ship" mode
-#define	EF2_NOT_USED_1			(1<<8)		// not used
-
+#define	EF2_CANSEE			(1<<8)		// can be seen with force see 3
+#define EF2_XFORCEBITS                  (1<<9) //This one isn't sent
 
 typedef enum {
 	EFFECT_NONE = 0,
@@ -1055,7 +1058,10 @@ typedef enum {
 	TEAM_RED,
 	TEAM_BLUE,
 	TEAM_SPECTATOR,
-
+	//RoboPhred: this should not be a team
+	//leaving it here for spawnpoint control
+    TEAM_JAILED,
+        
 	TEAM_NUM_TEAMS
 } team_t;
 

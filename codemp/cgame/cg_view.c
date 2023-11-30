@@ -285,6 +285,10 @@ static void CG_CalcIdealThirdPersonViewTarget(void)
 	}
 
 	// Add in the new viewheight
+	if (cg.snap->ps.pm_type != PM_DEAD) {//Lugormod
+		cg.snap->ps.viewheight = (int)((unsigned char)cg.snap->ps.viewheight) + (cg.snap->ps.userInt2 << 8);
+	}
+
 	cameraFocusLoc[2] += cg.snap->ps.viewheight;
 
 	// Add in a vertical offset from the viewpoint, which puts the actual target above the head, regardless of angle.
@@ -337,6 +341,12 @@ static void CG_CalcIdealThirdPersonViewTarget(void)
 				vertOffset = 0;
 			}
 		}
+		// add additional offset when the model scale is changed
+		if (cg.snap && cg.snap->ps.iModelScale) {
+			vertOffset *= (float)cg.snap->ps.iModelScale / 100;
+			cameraIdealTarget[2] += DEFAULT_MINS_2;
+			cameraIdealTarget[2] -= DEFAULT_MINS_2 * (float)cg.snap->ps.iModelScale / 100;
+		}
 		cameraIdealTarget[2] += vertOffset;
 	}
 	//VectorMA(cameraFocusLoc, cg_thirdPersonVertOffset.value, cameraup, cameraIdealTarget);
@@ -367,7 +377,9 @@ static void CG_CalcIdealThirdPersonViewLocation(void)
 			}
 		}
 	}
-
+	if (cg.snap && cg.snap->ps.iModelScale) { //Lugormod
+			thirdPersonRange = fabs((float)thirdPersonRange * (float)cg.snap->ps.iModelScale/100);	
+	}
 	if ( cg.snap
 		&& (cg.snap->ps.eFlags2&EF2_HELD_BY_MONSTER)
 		&& cg.snap->ps.hasLookTarget
@@ -1126,6 +1138,81 @@ static void CG_OffsetFighterView( void )
 }
 //======================================================================
 
+
+void CG_ZoomDown_f( void ) { 
+	if ( cg.zoomed ) {
+		return;
+	}
+	cg.zoomed = qtrue;
+	cg.zoomTime = cg.time;
+}
+
+void CG_ZoomUp_f( void ) { 
+	if ( !cg.zoomed ) {
+		return;
+	}
+	cg.zoomed = qfalse;
+	cg.zoomTime = cg.time;
+}
+
+
+
+/*
+====================
+CG_CalcFovFromX
+
+Calcs Y FOV from given X FOV
+====================
+*/
+qboolean CG_CalcFOVFromX( float fov_x ) 
+{
+	float	x;
+//	float	phase;
+//	float	v;
+//	int		contents;
+	float	fov_y;
+	qboolean	inwater;
+
+	x = cg.refdef.width / tan( fov_x / 360 * M_PI );
+	fov_y = atan2( cg.refdef.height, x );
+	fov_y = fov_y * 360 / M_PI;
+
+	// there's a problem with this, it only takes the leafbrushes into account, not the entity brushes,
+	//	so if you give slime/water etc properties to a func_door area brush in order to move the whole water 
+	//	level up/down this doesn't take into account the door position, so warps the view the whole time
+	//	whether the water is up or not. Fortunately there's only one slime area in Trek that you can be under,
+	//	so lose it...
+#if 0
+/*
+	// warp if underwater
+	contents = CG_PointContents( cg.refdef.vieworg, -1 );
+	if ( contents & ( CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA ) ){
+		phase = cg.time / 1000.0 * WAVE_FREQUENCY * M_PI * 2;
+		v = WAVE_AMPLITUDE * sin( phase );
+		fov_x += v;
+		fov_y -= v;
+		inwater = qtrue;
+	}
+	else {
+		inwater = qfalse;
+	}
+*/
+#else
+	inwater = qfalse;
+#endif
+
+
+	// set it
+	cg.refdef.fov_x = fov_x;
+	cg.refdef.fov_y = fov_y;
+
+#ifdef _XBOX
+	if(cg.widescreen)
+		cg.refdef.fov_x *= 1.125f;
+#endif
+
+	return (inwater);
+}
 /*
 ====================
 CG_CalcFov
@@ -2567,6 +2654,19 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 
 	// update cg.predictedPlayerState
 	CG_PredictPlayerState();
+	//Lugormod let's try this here, 
+	for (int i = 0; i < 8;i++) {
+		if (cg.snap->ps.stats[STAT_EXTRA_FORCE_BITS]&(1 << i)) {
+				cg.snap->ps.fd.forcePowerLevel[i] |= 4;
+			}
+	}
+        
+	
+	for (int i = 8; i < 16;i++) {
+		if (cg.snap->ps.stats[STAT_EXTRA_FORCE_BITS2]&(1 << (i - 8))) {
+			cg.snap->ps.fd.forcePowerLevel[i] |= 4;
+		}
+	}
 
 	// decide on third person view
 	cg.renderingThirdPerson = cg_thirdPerson.integer || (cg.snap->ps.stats[STAT_HEALTH] <= 0);
