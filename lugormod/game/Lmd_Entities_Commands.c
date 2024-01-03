@@ -1580,6 +1580,59 @@ void Cmd_Grab_f(gentity_t* ent, int iArg)
 	}
 }
 
+void Cmd_CancelGrab_f(gentity_t* ent)
+{
+	gentity_t* targ;
+
+	if (trap_Argc() > 1) {
+		char arg[MAX_STRING_CHARS] = "";
+		trap_Argv(1, arg, sizeof(arg));
+		targ = GetEnt(atoi(arg));
+	} else {
+		targ = AimAnyTarget(ent, 8192);
+	}
+
+	if (!targ || !targ->inuse) {
+		Disp(ent, "^3Entity not found");
+		return;
+	}
+
+	if (targ->think != Lmdp_Grabbed_Think) {
+		Disp(ent, "^3The selected entity is not currently being grabbed.");
+		return;
+	}
+
+	// Restore entity "think"
+	if (targ->Lmd.oldThink)
+	{
+		targ->think = targ->Lmd.oldThink;
+		targ->nextthink = level.time + targ->Lmd.oldNextthink;
+	}
+	else
+	{
+		targ->think = NULL;
+		targ->nextthink = 0;
+	}
+
+	// Reset other fields
+	targ->Lmd.oldThink = 0;
+	targ->Lmd.oldNextthink = 0;
+	targ->Lmd.grabOrigin = qfalse;
+	targ->Lmd.grabX = qfalse;
+	targ->Lmd.grabY = qfalse;
+	targ->Lmd.grabZ = qfalse;
+	targ->s.eFlags &= ~EF_CLIENTSMOOTH;
+	VectorClear(targ->Lmd.grabOffset);
+
+	if (!Lmdp_EditEntity(targ))
+	{
+		Disp(ent, "^1Entity failed to respawn.");
+		return 0;
+	}
+
+	Disp(ent, "^3Entity ^2%i ^3dropped. Initial position restored.", targ->s.number);
+}
+
 // Increase the distance between the grabbed entity and the player
 void Cmd_GrabOffsetInc_f(gentity_t* player)
 {
@@ -1743,6 +1796,7 @@ cmdEntry_t entityCommandEntries[] = {
 	{"GrabX", "[number]\nGrab entity, and rotate it along the X axis.", Cmd_Grab_f, GRAB_X, qtrue, 1, 0, 0},
 	{"GrabY", "[number]\nGrab entity, and rotate it along the Y axis.", Cmd_Grab_f, GRAB_Y, qtrue, 1, 0, 0},
 	{"GrabZ", "[number]\nGrab entity, and rotate it along the Z axis.", Cmd_Grab_f, GRAB_Z, qtrue, 1, 0, 0},
+	{"CancelGrab", "[number]\nDrop a grabbed entity, and restore its original position / angle.", Cmd_CancelGrab_f, 0, qtrue, 1, 0, 0},
 	{"Clone", "[number]\nClone entity.", Cmd_Clone_f, 0, qtrue, 1, 0, 0},
 	{"Measure", "Measure distance.", Cmd_Measure_f, 0, qtrue, 1, 0, 0},
 	{NULL}
