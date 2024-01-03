@@ -553,9 +553,9 @@ void Cmd_Ionlysaber_f (gentity_t *ent, int iArg)
 void Jedi_Spawn(gentity_t *ent){
 	ent->client->ps.trueNonJedi = qfalse;
 	ent->client->ps.trueJedi = qtrue;
-	//make sure they only use the saber
+	// Make sure they only use the saber (or melee)
 	ent->client->ps.weapon = WP_SABER;
-	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_SABER);
+	ent->client->ps.stats[STAT_WEAPONS] = (1 << WP_SABER) | (1 << WP_MELEE);
 
 #ifdef LMD_EXPERIMENTAL
 	int i = trap_Cvar_VariableIntegerValue("lmd_db_jedimaxforce");
