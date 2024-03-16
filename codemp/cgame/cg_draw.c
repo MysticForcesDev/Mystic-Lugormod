@@ -1159,7 +1159,7 @@ static void CG_DrawSimpleSaberStyle( const centity_t *cent )
 	char		num[7] = { 0 };
 	int			weapX = 16;
 
-	if ( !cent->currentState.weapon ) // We don't have a weapon right now
+	if ( cent->currentState.weapon == WP_NONE ) // We don't have a weapon right now
 	{
 		return;
 	}
@@ -1213,7 +1213,7 @@ static void CG_DrawSimpleAmmo( const centity_t *cent )
 	int			currValue = 0;
 	char		num[16] = { 0 };
 
-	if ( !cent->currentState.weapon ) // We don't have a weapon right now
+	if ( cent->currentState.weapon == WP_NONE ) // We don't have a weapon right now
 	{
 		return;
 	}

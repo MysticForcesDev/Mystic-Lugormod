@@ -285,6 +285,10 @@ static void CG_CalcIdealThirdPersonViewTarget(void)
 	}
 
 	// Add in the new viewheight
+	if (cg.snap->ps.pm_type != PM_DEAD) {//Lugormod
+		cg.snap->ps.viewheight = (int)((unsigned char)cg.snap->ps.viewheight) + (cg.snap->ps.userInt2 << 8);
+	}
+
 	cameraFocusLoc[2] += cg.snap->ps.viewheight;
 
 	// Add in a vertical offset from the viewpoint, which puts the actual target above the head, regardless of angle.
@@ -337,6 +341,12 @@ static void CG_CalcIdealThirdPersonViewTarget(void)
 				vertOffset = 0;
 			}
 		}
+		// add additional offset when the model scale is changed
+		if (cg.snap && cg.snap->ps.iModelScale) {
+			vertOffset *= (float)cg.snap->ps.iModelScale / 100;
+			cameraIdealTarget[2] += DEFAULT_MINS_2;
+			cameraIdealTarget[2] -= DEFAULT_MINS_2 * (float)cg.snap->ps.iModelScale / 100;
+		}
 		cameraIdealTarget[2] += vertOffset;
 	}
 	//VectorMA(cameraFocusLoc, cg_thirdPersonVertOffset.value, cameraup, cameraIdealTarget);
@@ -367,7 +377,9 @@ static void CG_CalcIdealThirdPersonViewLocation(void)
 			}
 		}
 	}
-
+	if (cg.snap && cg.snap->ps.iModelScale) { //Lugormod
+			thirdPersonRange = fabs((float)thirdPersonRange * (float)cg.snap->ps.iModelScale/100);	
+	}
 	if ( cg.snap
 		&& (cg.snap->ps.eFlags2&EF2_HELD_BY_MONSTER)
 		&& cg.snap->ps.hasLookTarget
@@ -2567,6 +2579,19 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 
 	// update cg.predictedPlayerState
 	CG_PredictPlayerState();
+	//Lugormod let's try this here, 
+	for (int i = 0; i < 8;i++) {
+		if (cg.snap->ps.stats[STAT_EXTRA_FORCE_BITS]&(1 << i)) {
+				cg.snap->ps.fd.forcePowerLevel[i] |= 4;
+			}
+	}
+        
+	
+	for (int i = 8; i < 16;i++) {
+		if (cg.snap->ps.stats[STAT_EXTRA_FORCE_BITS2]&(1 << (i - 8))) {
+			cg.snap->ps.fd.forcePowerLevel[i] |= 4;
+		}
+	}
 
 	// decide on third person view
 	cg.renderingThirdPerson = cg_thirdPerson.integer || (cg.snap->ps.stats[STAT_HEALTH] <= 0);

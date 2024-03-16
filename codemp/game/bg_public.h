@@ -133,14 +133,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define	CS_SOUNDS				(CS_SKYBOXORG+1)
 #define CS_ICONS				(CS_SOUNDS+MAX_SOUNDS)
 #define	CS_PLAYERS				(CS_ICONS+MAX_ICONS)
-/*
-Ghoul2 Insert Start
-*/
-#define CS_G2BONES				(CS_PLAYERS+MAX_CLIENTS)
-//rww - used to be CS_CHARSKINS, but I have eliminated the need for that.
-/*
-Ghoul2 Insert End
-*/
+#define CS_G2BONES				(CS_PLAYERS+MAX_CLIENTS) 	//rww - used to be CS_CHARSKINS, but I have eliminated the need for that.
 #define CS_LOCATIONS			(CS_G2BONES+MAX_G2BONES)
 #define CS_PARTICLES			(CS_LOCATIONS+MAX_LOCATIONS)
 #define CS_EFFECTS				(CS_PARTICLES+MAX_LOCATIONS)
@@ -574,7 +567,12 @@ typedef enum {
 	STAT_ARMOR,
 	STAT_DEAD_YAW,					// look this direction when dead (FIXME: get rid of?)
 	STAT_CLIENTS_READY,				// bit mask of clients wishing to exit the intermission (FIXME: configstring?)
-	STAT_MAX_HEALTH					// health / armor limit, changable by handicap
+	STAT_MAX_HEALTH,				// health / armor limit, changable by handicap
+	STAT_PROFESSION,				//Lugormod profession
+	STAT_LEVEL,						//Lugormod Level
+	STAT_EXTRA_FORCE_BITS,			//Lugormod extra bits for >3 force levels
+	STAT_EXTRA_FORCE_BITS2			//Lugormod extra bits for >3 force levels
+	//STAT_PERS_FLAGS,				//Lugormod persistant flags
 } statIndex_t;
 
 
@@ -654,8 +652,8 @@ typedef enum {
 
 #define EF_JETPACK				(1<<29)		//rww - wearing a jetpack
 #define EF_JETPACK_FLAMING		(1<<30)		//rww - jetpack fire effect
-
-#define	EF_NOT_USED_5			(1<<31)		// not used
+#define EF_GRAPPLING			(1<<31) 	// Lugormod
+#define EF_PROFESSION			(1<<32) 	// Lugormod
 
 //These new EF2_??? flags were added for NPCs, they really should not be used often.
 //NOTE: we only allow 10 of these!
@@ -667,8 +665,8 @@ typedef enum {
 #define	EF2_HYPERSPACE			(1<<5)		// Used to both start the hyperspace effect on the predicted client and to let the vehicle know it can now jump into hyperspace (after turning to face the proper angle)
 #define	EF2_BRACKET_ENTITY		(1<<6)		// Draw as bracketed
 #define	EF2_SHIP_DEATH			(1<<7)		// "died in ship" mode
-#define	EF2_NOT_USED_1			(1<<8)		// not used
-
+#define	EF2_CANSEE				(1<<8)		// Can be seen with force see 3
+#define EF2_XFORCEBITS			(1<<9)		// This one isn't sent
 
 typedef enum {
 	EFFECT_NONE = 0,
@@ -1055,7 +1053,9 @@ typedef enum {
 	TEAM_RED,
 	TEAM_BLUE,
 	TEAM_SPECTATOR,
-
+	
+    TEAM_JAILED, //Lugormod: this should not be a team, leaving it here for spawnpoint control
+        
 	TEAM_NUM_TEAMS
 } team_t;
 
@@ -1526,6 +1526,8 @@ typedef struct bladeInfo_s {
 	int				hitWallDebounceTime;
 	int				storageTime;
 	int				extendDebounce;
+	float   		unscaledRadius;		//Lugormod
+	float         	unscaledLengthMax;	//Lugoromd
 } bladeInfo_t;
 #define MAX_BLADES 8
 
