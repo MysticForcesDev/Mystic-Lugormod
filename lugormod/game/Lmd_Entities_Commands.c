@@ -1257,7 +1257,6 @@ void DiagnoseBuilding(gentity_t *ent) {
 void Cmd_Entityinfo_t(gentity_t *ent, int iArg);
 
 // grab [entity number]
-// TODO:  using genericvalues 1 & 2 will not always be a good choice
 void Lmdp_Grabbed_Think(gentity_t* self)
 {
 	gentity_t* player = self->activator;
@@ -1279,7 +1278,6 @@ void Lmdp_Grabbed_Think(gentity_t* self)
 	else
 	{
 		// move with player
-		// TODO: longer grabbing arm and snap to entities
 		vec3_t end, start, forward;
 		trace_t tr;
 		int playerNum = player->s.number;
@@ -1297,24 +1295,18 @@ void Lmdp_Grabbed_Think(gentity_t* self)
 			if (self->r.bmodel) {
 				vec3_t dest, temp;
 				VectorAverage(self->r.mins, self->r.maxs, dest);
-				//if (self->r.currentAngles[0] || self->r.currentAngles[1] || self->r.currentAngles[2])
-				{
-					VectorCopy(dest, temp);
-					RotatePointAroundVector(dest, axisDefault[0], temp, self->r.currentAngles[2]);
-					VectorCopy(dest, temp);
-					RotatePointAroundVector(dest, axisDefault[1], temp, self->r.currentAngles[0]);
-					VectorCopy(dest, temp);
-					RotatePointAroundVector(dest, axisDefault[2], temp, self->r.currentAngles[1]);
-				}
+				VectorCopy(dest, temp);
+				RotatePointAroundVector(dest, axisDefault[0], temp, self->r.currentAngles[2]);
+				VectorCopy(dest, temp);
+				RotatePointAroundVector(dest, axisDefault[1], temp, self->r.currentAngles[0]);
+				VectorCopy(dest, temp);
+				RotatePointAroundVector(dest, axisDefault[2], temp, self->r.currentAngles[1]);
 				VectorSubtract(end, dest, dest);
 
 				VectorCopy(dest, self->s.pos.trBase);
 				self->s.pos.trTime = player->s.pos.trTime;
 				self->s.pos.trDuration = level.time + Q3_INFINITE;
 				self->s.pos.trType = TR_STATIONARY;
-
-				//VectorCopy(player->s.pos.trDelta, self->s.pos.trDelta);
-				//SnapVector(self->s.pos.trDelta);
 
 				VectorCopy(dest, self->r.currentOrigin);
 			}
@@ -1337,15 +1329,12 @@ void Lmdp_Grabbed_Think(gentity_t* self)
 			if (self->r.bmodel) { // The origin of "func" entities is not located inside the entity
 				vec3_t temp;
 				VectorAverage(self->r.mins, self->r.maxs, initialPosition);
-				if (self->r.currentAngles[0] || self->r.currentAngles[1] || self->r.currentAngles[2])
-				{
-					VectorCopy(initialPosition, temp);
-					RotatePointAroundVector(initialPosition, axisDefault[0], temp, self->r.currentAngles[2]);
-					VectorCopy(initialPosition, temp);
-					RotatePointAroundVector(initialPosition, axisDefault[1], temp, self->r.currentAngles[0]);
-					VectorCopy(initialPosition, temp);
-					RotatePointAroundVector(initialPosition, axisDefault[2], temp, self->r.currentAngles[1]);
-				}
+				VectorCopy(initialPosition, temp);
+				RotatePointAroundVector(initialPosition, axisDefault[0], temp, self->r.currentAngles[2]);
+				VectorCopy(initialPosition, temp);
+				RotatePointAroundVector(initialPosition, axisDefault[1], temp, self->r.currentAngles[0]);
+				VectorCopy(initialPosition, temp);
+				RotatePointAroundVector(initialPosition, axisDefault[2], temp, self->r.currentAngles[1]);
 			}
 
 			vec_t newAngle = 0;
@@ -1384,15 +1373,12 @@ void Lmdp_Grabbed_Think(gentity_t* self)
 			if (self->r.bmodel) { // The origin of "func" entities is not located inside the entity
 				vec3_t newPosition, temp;
 				VectorAverage(self->r.mins, self->r.maxs, newPosition);
-				if (self->r.currentAngles[0] || self->r.currentAngles[1] || self->r.currentAngles[2])
-				{
-					VectorCopy(newPosition, temp);
-					RotatePointAroundVector(newPosition, axisDefault[0], temp, self->r.currentAngles[2]);
-					VectorCopy(newPosition, temp);
-					RotatePointAroundVector(newPosition, axisDefault[1], temp, self->r.currentAngles[0]);
-					VectorCopy(newPosition, temp);
-					RotatePointAroundVector(newPosition, axisDefault[2], temp, self->r.currentAngles[1]);
-				}
+				VectorCopy(newPosition, temp);
+				RotatePointAroundVector(newPosition, axisDefault[0], temp, self->r.currentAngles[2]);
+				VectorCopy(newPosition, temp);
+				RotatePointAroundVector(newPosition, axisDefault[1], temp, self->r.currentAngles[0]);
+				VectorCopy(newPosition, temp);
+				RotatePointAroundVector(newPosition, axisDefault[2], temp, self->r.currentAngles[1]);
 
 				vec3_t positionOffset;
 				VectorSubtract(initialPosition, newPosition, positionOffset);
@@ -1441,16 +1427,29 @@ qboolean Lmdp_EditEntity(gentity_t* ent)
 
 int Lmdp_Grabbed_Set(gentity_t* player, gentity_t* ent, int mode, qboolean msg, vec3_t offset, qboolean pickup)
 {
-	// The distance between the grabbed entity and the player will be 128, initially
-	// (Can be increased with /GrabOffsetInc and decreased with /GrabOffsetDec)
-	player->client->Lmd.grabOffset = 128;
+	// Set the initial distance between the grabbed entity and the player
+	// (Can be increased with /GrabOffsetIncrease and decreased with /GrabOffsetDecrease)
 
-	/*if (ent->think && ent->think != Lmdp_Grabbed_Think)
-	{
-	Disp(player, "Grabbing is not currently supported for smart entities");
-	return 0;
+	vec3_t initialPosition;
+	if (ent->r.bmodel) { // The origin of "func" entities is not located inside the entity
+		vec3_t temp;
+		VectorAverage(ent->r.mins, ent->r.maxs, initialPosition);
+		VectorCopy(initialPosition, temp);
+		RotatePointAroundVector(initialPosition, axisDefault[0], temp, ent->r.currentAngles[2]);
+		VectorCopy(initialPosition, temp);
+		RotatePointAroundVector(initialPosition, axisDefault[1], temp, ent->r.currentAngles[0]);
+		VectorCopy(initialPosition, temp);
+		RotatePointAroundVector(initialPosition, axisDefault[2], temp, ent->r.currentAngles[1]);
+		VectorAdd(ent->r.currentOrigin, initialPosition, initialPosition);
+	} else { // Regular entity (not a "func")
+		VectorCopy(ent->r.currentOrigin, initialPosition);
 	}
-	*/
+
+	vec3_t originDiff;
+	VectorSubtract(initialPosition, player->r.currentOrigin, originDiff);
+	float distance = VectorLength(originDiff);
+	player->client->Lmd.grabOffset = distance;
+
 	if (ent->think == Lmdp_Grabbed_Think)
 	{
 		// restore entity thinking
@@ -1558,7 +1557,6 @@ int Lmdp_Grabbed_Set(gentity_t* player, gentity_t* ent, int mode, qboolean msg, 
 void Cmd_Grab_f(gentity_t* ent, int iArg)
 {
 	gentity_t* targ;
-	//vec3_t offs = { 0, 140, 0};
 
 	if (trap_Argc() > 1) {
 		char arg[MAX_STRING_CHARS] = "";
@@ -1583,8 +1581,8 @@ void Cmd_Grab_f(gentity_t* ent, int iArg)
 // Increase the distance between the grabbed entity and the player
 void Cmd_GrabOffsetInc_f(gentity_t* player)
 {
-	if (player->client->Lmd.grabOffset >= 1024) {
-		player->client->Lmd.grabOffset = 1024;
+	if (player->client->Lmd.grabOffset >= 10000) {
+		player->client->Lmd.grabOffset = 10000;
 	} else if (player->client->Lmd.grabOffset < 0) {
 		player->client->Lmd.grabOffset = 0;
 	} else {
@@ -1595,8 +1593,8 @@ void Cmd_GrabOffsetInc_f(gentity_t* player)
 // Decrease the distance between the grabbed entity and the player
 void Cmd_GrabOffsetDec_f(gentity_t* player)
 {
-	if (player->client->Lmd.grabOffset > 1024) {
-		player->client->Lmd.grabOffset = 1024;
+	if (player->client->Lmd.grabOffset > 10000) {
+		player->client->Lmd.grabOffset = 10000;
 	} else if (player->client->Lmd.grabOffset <= 0) {
 		player->client->Lmd.grabOffset = 0;
 	} else {
