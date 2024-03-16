@@ -4438,7 +4438,7 @@ void ClientSpawn(gentity_t *ent) {
 		//RoboPhred: sanify
 		if(client->ps.trueJedi) {
 			client->ps.stats[STAT_HOLDABLE_ITEMS] = 0;
-			client->ps.stats[STAT_WEAPONS] = (1 << WP_SABER);
+			client->ps.stats[STAT_WEAPONS] = (1 << WP_SABER) | (1 << WP_MELEE);
 		}
 		if(client->ps.trueNonJedi) {
 			client->ps.stats[STAT_WEAPONS] &= ~(1 << WP_SABER);
