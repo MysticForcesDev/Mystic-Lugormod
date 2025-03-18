@@ -699,6 +699,8 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			return;
 		}
 		level--;
+
+		Disp(ent, va("^3The ^2%s^3 skill is now at level ^2%i^3.", skill->name, level));
 	}
 	else {
 		if(level >= skill->levels.max) {
@@ -706,6 +708,8 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 			return;
 		}
 		level++;
+
+		Disp(ent, va("^3The ^2%s^3 skill is now at level ^2%i^3.", skill->name, level));
 
 		int points = Professions_AvailableSkillPoints(acc, prof, skill, NULL);
 		if(points < level) {
@@ -746,7 +750,6 @@ void Cmd_SkillSelect_Level(gentity_t *ent, int prof, profSkill_t *skill, qboolea
 	}
 
 	skill->setValue(acc, skill, level);
-	Disp(ent, va("^3The ^2%s^3 skill is now at level ^2%i^3.", skill->name, level));
 	Profession_UpdateSkillEffects(ent, prof);
 }
 
