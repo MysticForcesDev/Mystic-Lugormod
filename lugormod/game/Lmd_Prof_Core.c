@@ -832,23 +832,27 @@ void Cmd_SkillSelect(gentity_t *ent, int prof, profSkill_t *skill, int depth) {
 
 		if(skill->setValue && skill->levels.max > skill->levels.min) {
 			int points = Professions_AvailableSkillPoints(acc, prof, skill, NULL);
-			int cost = Professions_SkillCost(skill, level + 1) - Professions_SkillCost(skill, level);
 
 			if(level < skill->levels.max) {
-				if(points >= level + 1)
+				if (points >= level + 1) {
+					int cost = Professions_SkillCost(skill, level + 1) - Professions_SkillCost(skill, level);
 					Disp(ent, va("^3Use ^2/%s up^3 to increase the ^2%s^3 skill.  It will cost ^2%i^3 point%s, leaving you with ^2%i^3 point%s left.",
 						cmd, skill->name, cost, (cost == 1) ? "" : "s", points - cost, (points - cost == 1) ? "" : "s"));
-				else
+				} else {
 					Disp(ent, va("^3You do not have enough points to increase the ^2%s^3 skill.", skill->name));
-			}
-			else
+				}
+			} else {
 				Disp(ent, va("^3The ^2%s^3 skill is at its maximum level", skill->name));
+			}
+
 			if(skill->levels.canRemove) {
-				if(level > skill->levels.min)
+				if (level > skill->levels.min) {
+					int cost = Professions_SkillCost(skill, level) - Professions_SkillCost(skill, level - 1);
 					Disp(ent, va("^3Use ^2/%s down^3 to decrease the ^2%s^3 skill.  You will regain ^2%i^3 point%s, bringing you up to ^2%i^3 point%s total.",
-					cmd, skill->name, cost, (cost == 1) ? "" : "s", points + cost, (points + cost == 1) ? "" : "s"));
-				else
+						cmd, skill->name, cost, (cost == 1) ? "" : "s", points + cost, (points + cost == 1) ? "" : "s"));
+				} else {
 					Disp(ent, va("^3The ^2%s^3 skill is at its minimum level.", skill->name));
+				}
 			}
 		}
 	}
