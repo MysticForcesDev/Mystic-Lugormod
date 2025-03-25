@@ -243,7 +243,7 @@ profSkill_t jediSkill_Neutral_Subskills[] = {
 	},
 	{ //jediSkill_Neutral_Seeing,
 	"Seeing", "Locate others through barriers, and find money stashes.  Sense others using Mind Trick",
-	jediSkill_Neutral_Seeing_Descr, 0, {0, 3}, SkillPoints_Default, //Ufo:
+	jediSkill_Neutral_Seeing_Descr, 0, {0, 3, qtrue}, SkillPoints_Default,
 	Lmd_Prof_Jedi_GetSkill_Seeing, Lmd_Prof_Jedi_CanSetSkill_Seeing, Lmd_Prof_Jedi_SetSkill_Seeing
 	},
 };
