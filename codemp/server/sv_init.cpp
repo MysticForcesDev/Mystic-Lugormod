@@ -1013,6 +1013,14 @@ void SV_Init (void) {
 	sv_maxOOBRate = Cvar_Get("sv_maxOOBRate", "1000", CVAR_ARCHIVE, "Maximum rate of handling incoming server commands" );
 	sv_maxOOBRateIP = Cvar_Get("sv_maxOOBRateIP", "1", CVAR_ARCHIVE, "Maximum rate of handling incoming server commands per IP address" );
 	sv_autoWhitelist = Cvar_Get("sv_autoWhitelist", "1", CVAR_ARCHIVE, "Save player IPs to allow them using server during DOS attack" );
+	sv_timeWrapCommand = Cvar_Get(
+		"sv_timeWrapCommand",
+		"",
+		CVAR_ARCHIVE,
+		"Which command should the server execute after it restarts due to time wrapping (or numSnapshotEntities wrapping)."
+        // Designed to add back the bots after the server restarts.
+		// Could be "exec addbots.cfg", or even "exec server.cfg" if need be.
+	);
 
 	// initialize bot cvars so they are listed and can be set before loading the botlib
 	SV_BotInitCvars();
