@@ -315,6 +315,7 @@ vmCvar_t		d_noGroupAI;
 vmCvar_t		d_asynchronousGroupAI;
 vmCvar_t		d_slowmodeath;
 vmCvar_t		d_noIntermissionWait;
+vmCvar_t		g_mapChangeWhenScoreIsTied;
 
 vmCvar_t		g_spskill;
 
@@ -842,6 +843,9 @@ static cvarTable_t		gameCvarTable[] = {
 	//mainly for debugging with bots while I'm not around (want the server to
 	//cycle through levels naturally)
 	{ &d_noIntermissionWait, "d_noIntermissionWait", "0", CVAR_CHEAT, 0, qfalse  },
+
+	// Change the map even if the score is tied?
+	{ &g_mapChangeWhenScoreIsTied, "g_mapChangeWhenScoreIsTied", "0", CVAR_ARCHIVE, 0, qfalse },
 
 	{ &g_austrian, "g_austrian", "0", CVAR_ARCHIVE, 0, qfalse  },
 	// nmckenzie:
@@ -3758,7 +3762,7 @@ void CheckExitRules( void ) {
 	if (g_gametype.integer != GT_SIEGE
 		&& g_gametype.integer != GT_BATTLE_GROUND) //Lugormod
 	{
-		if ( ScoreIsTied() ) {
+		if ( ScoreIsTied() && !g_mapChangeWhenScoreIsTied.integer) {
 			// always wait for sudden death
 			if ((g_gametype.integer != GT_DUEL) || !g_timelimit.integer)
 			{
