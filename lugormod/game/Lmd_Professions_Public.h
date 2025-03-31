@@ -17,7 +17,7 @@ typedef struct skillLevelDef_s {
 }skillLevelDef_t;
 
 //static skillLevelDef_t SkillLevels_Default = {0, 5, qfalse};
-#define SkillLevels_Default {0, 5, qfalse}
+#define SkillLevels_Default {0, 5, qtrue}
 
 typedef enum {
 	SPT_NOCOST,
