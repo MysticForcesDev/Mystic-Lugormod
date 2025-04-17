@@ -72,6 +72,7 @@ cvar_t	*sv_banFile;
 cvar_t	*sv_maxOOBRate;
 cvar_t	*sv_maxOOBRateIP;
 cvar_t	*sv_autoWhitelist;
+cvar_t* sv_timeWrapCommand;
 
 serverBan_t serverBans[SERVER_MAXBANS];
 int serverBansCount = 0;
@@ -1184,13 +1185,21 @@ void SV_Frame( int msec ) {
 	// 2giga-milliseconds = 23 days, so it won't be too often
 	if ( svs.time > 0x70000000 ) {
 		SV_Shutdown( "Restarting server due to time wrapping" );
-		Cbuf_AddText( va( "map %s\n", Cvar_VariableString( "mapname" ) ) );
+		Cbuf_AddText( "vstr nextmap\n" ); // Used to be "map ...", but it broke the rotation...
+		// Optionally execute a custom command (typically, to add back the bots)
+		if ( sv_timeWrapCommand->string[0] ) {
+			Cbuf_AddText( "vstr sv_timeWrapCommand\n" );
+		}
 		return;
 	}
 	// this can happen considerably earlier when lots of clients play and the map doesn't change
 	if ( svs.nextSnapshotEntities >= 0x7FFFFFFE - svs.numSnapshotEntities ) {
 		SV_Shutdown( "Restarting server due to numSnapshotEntities wrapping" );
-		Cbuf_AddText( va( "map %s\n", Cvar_VariableString( "mapname" ) ) );
+		Cbuf_AddText( "vstr nextmap\n" ); // Used to be "map ...", but it broke the rotation...
+		// Optionally execute a custom command (typically, to add back the bots)
+		if ( sv_timeWrapCommand->string[0] ) {
+			Cbuf_AddText( "vstr sv_timeWrapCommand\n" );
+		}
 		return;
 	}
 
